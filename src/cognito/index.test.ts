@@ -19,6 +19,7 @@ describe("AuthHelper for Cognito", () => {
     expect(authHelper.getCredentials()).toStrictEqual({
       accessKeyId: "",
       secretAccessKey: "",
+      sessionToken: "",
     });
   });
 });

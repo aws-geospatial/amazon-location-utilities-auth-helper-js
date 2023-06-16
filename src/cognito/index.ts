@@ -17,6 +17,7 @@ export async function withIdentityPool(identityPoolId: string): Promise<AuthHelp
     getCredentials: () => ({
       accessKeyId: "",
       secretAccessKey: "",
+      sessionToken: "",
     }),
   };
 }
