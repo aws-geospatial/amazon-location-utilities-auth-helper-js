@@ -1,4 +1,5 @@
 # Amazon Location Utilities - Authentication Helper for JavaScript
+
 Utilities to help customer authenticate calls to our map tiles endpoint using Cognito Identity Pool or ApiKey
 
 # Getting Help
@@ -11,9 +12,11 @@ or [guidance](https://github.com/aws-geospatial/amazon-location-utilities-auth-h
 If you have a support plan with [AWS Support](https://aws.amazon.com/premiumsupport/), you can also create a new support case.
 
 Please make sure to check out our resources too before opening an issue:
-* Our [Changelog](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/blob/master/CHANGELOG.md) for recent changes.
+
+- Our [Changelog](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/blob/master/CHANGELOG.md) for recent changes.
 
 # Contributing
+
 We welcome community contributions and pull requests. See [CONTRIBUTING.md](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/blob/master/CONTRIBUTING.md) for information on how to set up a development environment and submit code.
 
 ## License
