@@ -9,17 +9,9 @@ export interface MapAuthenticationOptions {}
 // eslint-disable-next-line  @typescript-eslint/no-empty-interface
 export interface LocationClientConfig {}
 
-export interface getMapAuthenticationOptionsFunc {
-  (): MapAuthenticationOptions;
-}
-
-export interface getLocationClientConfigFunc {
-  (): LocationClientConfig;
-}
-
-export interface getCredentialsFunc {
-  (): AwsCredentialIdentity;
-}
+export type getMapAuthenticationOptionsFunc = () => MapAuthenticationOptions;
+export type getLocationClientConfigFunc = () => LocationClientConfig;
+export type getCredentialsFunc = () => AwsCredentialIdentity;
 
 export interface AuthHelper extends SDKAuthHelper {
   getMapAuthenticationOptions: getMapAuthenticationOptionsFunc;
