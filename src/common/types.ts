@@ -21,8 +21,11 @@ export interface getCredentialsFunc {
   (): AwsCredentialIdentity;
 }
 
-export interface AuthHelper {
+export interface AuthHelper extends SDKAuthHelper {
   getMapAuthenticationOptions: getMapAuthenticationOptionsFunc;
-  getLocationClientConfig: getLocationClientConfigFunc;
   getCredentials: getCredentialsFunc;
+}
+
+export interface SDKAuthHelper {
+  getLocationClientConfig: getLocationClientConfigFunc;
 }

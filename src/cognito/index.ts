@@ -9,7 +9,7 @@ import { AuthHelper } from "../common/types";
  * @param identityPoolId Cognito Identity Pool Id
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function withIdentityPool(identityPoolId: string): Promise<AuthHelper> {
+export async function withIdentityPoolId(identityPoolId: string): Promise<AuthHelper> {
   await new Promise((resolve) => setTimeout(resolve, 1));
   return {
     getMapAuthenticationOptions: () => ({}),
