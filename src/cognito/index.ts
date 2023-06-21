@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { AuthHelper } from "../common/types";
+import { MapAuthHelper, SDKAuthHelper } from "../common/types";
 
 /**
  * Creates an auth helper instance using credentials from Cognito.
@@ -9,7 +9,7 @@ import { AuthHelper } from "../common/types";
  * @param identityPoolId Cognito Identity Pool Id
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function withIdentityPoolId(identityPoolId: string): Promise<AuthHelper> {
+export async function withIdentityPoolId(identityPoolId: string): Promise<MapAuthHelper & SDKAuthHelper> {
   await new Promise((resolve) => setTimeout(resolve, 1));
   return {
     getMapAuthenticationOptions: () => ({}),
