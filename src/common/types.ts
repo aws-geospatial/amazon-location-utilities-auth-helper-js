@@ -6,7 +6,6 @@ import { AwsCredentialIdentity, RequestSigner } from "@aws-sdk/types";
 // eslint-disable-next-line  @typescript-eslint/no-empty-interface
 export interface MapAuthenticationOptions {}
 
-// eslint-disable-next-line  @typescript-eslint/no-empty-interface
 export interface LocationClientConfig {
   signer?: RequestSigner;
 }
