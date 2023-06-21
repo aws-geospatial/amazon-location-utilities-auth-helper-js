@@ -4,18 +4,55 @@
 import { withAPIKey } from "./index";
 
 describe("AuthHelper for APIKey", () => {
-  it("should provide stub getLocationClientConfig function", async () => {
-    const authHelper = await withAPIKey("api.key");
-    expect(authHelper.getLocationClientConfig()).toStrictEqual({});
+  const API_KEY = "api.key";
+  it.each([
+    [{}, { key: API_KEY }],
+    [{ other: "value" }, { other: "value", key: API_KEY }],
+    [null, { key: API_KEY }],
+  ])("getLocationClientConfig should provide a signer to add api key to the query", async (query, expectedQuery) => {
+    const authHelper = await withAPIKey(API_KEY);
+    const signer = authHelper.getLocationClientConfig().signer;
+    const request = {
+      hostname: "amazonaws.com",
+      path: "/",
+      protocol: "https",
+      method: "GET",
+      headers: {},
+    };
+    expect(
+      await signer.sign({
+        ...request,
+        query,
+      }),
+    ).toStrictEqual({
+      ...request,
+      query: expectedQuery,
+    });
+  });
+
+  it("APIKey provided by getLocationClientConfig should be overridden by one set in the command", async () => {
+    const authHelper = await withAPIKey(API_KEY);
+    const signer = authHelper.getLocationClientConfig().signer;
+    const request = {
+      hostname: "amazonaws.com",
+      path: "/",
+      protocol: "https",
+      method: "GET",
+      headers: {},
+      query: {
+        key: "OTHER_KEY",
+      },
+    };
+    expect(await signer.sign(request)).toStrictEqual(request);
   });
 
   it("should not provide stub getMapAuthenticationOptions function", async () => {
-    const authHelper = await withAPIKey("api.key");
+    const authHelper = await withAPIKey(API_KEY);
     expect("getMapAuthenticationOptions" in authHelper).toBe(false);
   });
 
   it("should not provide getCredentials function", async () => {
-    const authHelper = await withAPIKey("api.key");
+    const authHelper = await withAPIKey(API_KEY);
     expect("getCredentials" in authHelper).toBe(false);
   });
 });
