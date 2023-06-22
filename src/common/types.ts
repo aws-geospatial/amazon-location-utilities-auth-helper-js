@@ -3,11 +3,13 @@
 
 import { AwsCredentialIdentity, RequestSigner } from "@aws-sdk/types";
 
-// eslint-disable-next-line  @typescript-eslint/no-empty-interface
-export interface MapAuthenticationOptions {}
+export interface MapAuthenticationOptions {
+  transformRequest: (url: string, resourceType?: string) => { url: string };
+}
 
 export interface LocationClientConfig {
   signer?: RequestSigner;
+  credentials?: AwsCredentialIdentity;
 }
 
 export type getMapAuthenticationOptionsFunc = () => MapAuthenticationOptions;
