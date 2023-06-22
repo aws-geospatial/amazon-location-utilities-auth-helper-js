@@ -48,7 +48,7 @@ export async function withIdentityPoolId(identityPoolId: string): Promise<MapAut
       },
     }),
     getLocationClientConfig: () => ({
-      credentials,
+      credentials: credentialsProvider,
     }),
     getCredentials: () => credentials,
   };

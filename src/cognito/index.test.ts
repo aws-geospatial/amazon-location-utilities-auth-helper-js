@@ -97,7 +97,7 @@ describe("AuthHelper for Cognito", () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     const additionalLocationClientConfig = authHelper.getLocationClientConfig();
     expect("signer" in additionalLocationClientConfig).toBe(false);
-    expect(additionalLocationClientConfig.credentials).toStrictEqual(mockedCredentials);
+    expect(await additionalLocationClientConfig.credentials()).toStrictEqual(mockedCredentials);
   });
 
   it("getCredentials should return the credentials", async () => {
