@@ -11,8 +11,12 @@ import { AwsCredentialIdentity } from "@aws-sdk/types";
  * @param identityPoolId Cognito Identity Pool Id
  */
 export async function withIdentityPoolId(identityPoolId: string): Promise<MapAuthHelper & SDKAuthHelper> {
+  const region = identityPoolId.split(":")[0];
   const credentialsProvider = fromCognitoIdentityPool({
     identityPoolId,
+    clientConfig: {
+      region,
+    },
   });
 
   let credentials: AwsCredentialIdentity;
