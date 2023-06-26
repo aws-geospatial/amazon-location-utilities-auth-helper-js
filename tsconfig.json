@@ -1,12 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "module": "esnext",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    // Ensure that .d.ts files are created by tsc, but not .js files
-    "declaration": true,
-    "emitDeclarationOnly": true,
     "outDir": "dist"
   },
   "typedocOptions": {

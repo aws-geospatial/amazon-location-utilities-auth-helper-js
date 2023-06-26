@@ -24,17 +24,9 @@
   "engines": {
     "node": ">= 16.0.0"
   },
-  "main": "dist/js/index.js",
-  "module": "dist/es/index.js",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/es/index.js",
-      "require": "./dist/js/index.js"
-    }
-  },
-  "types": "dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "scripts": {
     "prettier": "prettier -w .",
     "prettier:check": "prettier -c .",
@@ -43,7 +35,11 @@
     "typedoc": "typedoc",
     "test": "jest --coverage",
     "build": "npm-run-all build:*",
-    "build:types": "tsc",
+    "build:ts": "npm-run-all build-ts:*",
+    "build:bundle": "rollup -c",
+    "build-ts:types": "tsc --declaration --emitDeclarationOnly --outDir dist/types",
+    "build-ts:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "build-ts:esm": "tsc --esModuleInterop --module esnext --outDir dist/esm",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -63,6 +59,10 @@
     "@babel/core": "^7.21.8",
     "@babel/preset-env": "^7.21.5",
     "@babel/preset-typescript": "^7.21.5",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^25.0.2",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/jest": "^29.5.0",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
