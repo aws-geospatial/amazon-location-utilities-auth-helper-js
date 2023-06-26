@@ -12,8 +12,8 @@ jest.mock("@aws-amplify/core");
 
 describe("AuthHelper for Cognito", () => {
   jest.useFakeTimers();
-
-  const cognitoIdentityPoolId = "TEST-IDENTITY-POOL-ID";
+  const region = "us-west-2";
+  const cognitoIdentityPoolId = `${region}:TEST-IDENTITY-POOL-ID`;
   const url = "https://maps.geo.us-west-2.amazonaws.com/";
   const signedUrl = "https://maps.geo.us-west-2.amazonaws.com/#signed";
   const nonAWSUrl = "https://example.com/";
@@ -46,7 +46,12 @@ describe("AuthHelper for Cognito", () => {
   it("should get credentials from cognito", async () => {
     await withIdentityPoolId(cognitoIdentityPoolId);
     expect(fromCognitoIdentityPool).toHaveBeenCalledTimes(1);
-    expect(fromCognitoIdentityPool).toHaveBeenCalledWith({ identityPoolId: cognitoIdentityPoolId });
+    expect(fromCognitoIdentityPool).toHaveBeenCalledWith({
+      identityPoolId: cognitoIdentityPoolId,
+      clientConfig: {
+        region,
+      },
+    });
   });
 
   it("should refresh credentials in 1 hour minus 1 minute by default", async () => {
