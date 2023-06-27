@@ -1,8 +1,8 @@
 {
-  "name": "@aws/amazon-location-utilities-auth-helper-js",
+  "name": "@aws/amazon-location-utilities-auth-helper",
   "description": "Amazon Location Utilities - Authentication Helper for JavaScript",
   "license": "Apache-2.0",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "keywords": [],
   "author": {
     "name": "Amazon Web Services",
@@ -27,7 +27,18 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
+  "files": [
+    "./LICENSE.txt",
+    "./LICENSE-THIRD-PARTY",
+    "./CODE_OF_CONDUCT.md",
+    "./CONTRIBUTING.md",
+    "./Notice.txt",
+    "./README.md",
+    "./package.json",
+    "./dist/*"
+  ],
   "scripts": {
+    "clean": "rm -r dist",
     "prettier": "prettier -w .",
     "prettier:check": "prettier -c .",
     "lint": "eslint .",
@@ -40,7 +51,8 @@
     "build-ts:types": "tsc --declaration --emitDeclarationOnly --outDir dist/types",
     "build-ts:cjs": "tsc --module commonjs --outDir dist/cjs",
     "build-ts:esm": "tsc --esModuleInterop --module esnext --outDir dist/esm",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepublishOnly": "npm-run-all clean lint prettier:check test build"
   },
   "lint-staged": {
     "*.{js,ts}": [
