@@ -29,7 +29,7 @@
   "types": "./dist/types/index.d.ts",
   "files": [
     "./LICENSE.txt",
-    "./LICENSE-THIRD-PARTY",
+    "./LICENSE-THIRD-PARTY.txt",
     "./CODE_OF_CONDUCT.md",
     "./CONTRIBUTING.md",
     "./Notice.txt",
