@@ -10,6 +10,7 @@
 /build
 /dist
 /docs
+/*.tgz
 
 # misc
 .DS_Store
