@@ -36,7 +36,7 @@ const identityPoolId = "<Identity Pool ID>";
 const authHelper = await withIdentityPoolId(identityPoolId);
 
 const client = new LocationClient({
-  region: "<Region>", // region containing Cognito pool
+  region: "<Region>", // region containing Amazon Location resource
   ...authHelper.getLocationClientConfig(), // Provides configuration required to make requests to Amazon Location
 });
 const input = { ... };
@@ -58,7 +58,7 @@ const apiKey = "<API Key>";
 const authHelper = await withAPIKey(apiKey);
 
 const client = new LocationClient({
-  region: "<Region>", // region containing API key
+  region: "<Region>", // region containing Amazon Location resource
   ...authHelper.getLocationClientConfig(), // Provides configuration required to make requests to Amazon Location
 });
 const input = { ... };
@@ -78,8 +78,7 @@ import { withIdentityPoolId } from "@aws/amazon-location-utilities-auth-helper";
 
 const identityPoolId = "<Identity Pool ID>";
 const mapName = "<Map Name>";
-// Extract the region from the Identity Pool ID
-const region = identityPoolId.split(":")[0];
+const region = "<Region>"; // region containing Amazon Location resource
 
 // Create an authentication helper instance using credentials from Cognito
 const authHelper = await withIdentityPoolId(identityPoolId);
@@ -116,7 +115,7 @@ const identityPoolId = "<Identity Pool ID>";
 const authHelper = await amazonLocationAuthHelper.withIdentityPoolId(identityPoolId);
 
 const client = new amazonLocationClient.LocationClient({
-  region: "<Region>", // region containing Cognito pool
+  region: "<Region>", // region containing Amazon Location resource
   ...authHelper.getLocationClientConfig(), // Provides configuration required to make requests to Amazon Location
 });
 const input = { ... };
@@ -140,7 +139,7 @@ const apiKey = "<API Key>";
 const authHelper = await amazonLocationAuthHelper.withAPIKey(apiKey);
 
 const client = new amazonLocationClient.LocationClient({
-  region: "<Region>", // region containing API key
+  region: "<Region>", // region containing Amazon Location resource
   ...authHelper.getLocationClientConfig(), // Provides configuration required to make requests to Amazon Location
 });
 const input = { ... };
@@ -162,8 +161,7 @@ This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/
 ```javascript
 const identityPoolId = "<Identity Pool ID>";
 const mapName = "<Map Name>";
-// Extract the region from the Identity Pool ID
-const region = identityPoolId.split(":")[0];
+const region = "<Region>"; // region containing Amazon Location resource
 
 // Create an authentication helper instance using credentials from Cognito
 const authHelper = await amazonLocationAuthHelper.withIdentityPoolId(identityPoolId);
