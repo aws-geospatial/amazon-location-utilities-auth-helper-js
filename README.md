@@ -13,7 +13,7 @@ npm install @aws/amazon-location-utilities-auth-helper
 Importing in an HTML file for usage directly in the browser.
 
 ```html
-<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@%5E1.0.0/dist/amazonLocationAuthHelper.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1.x/dist/amazonLocationAuthHelper.js"></script>
 ```
 
 # Usage
@@ -103,9 +103,9 @@ This example uses the Amazon Location Client to make a request that that authent
 
 ```html
 <!-- Importing Amazon Location Client -->
-<script src="https://www.unpkg.com/@aws/amazon-location-client@%5E1.0.0/dist/amazonLocationClient.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-client@1.x/dist/amazonLocationClient.js"></script>
 <!-- Importing the utility library from an HTML file -->
-<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@%5E1.0.0/dist/amazonLocationAuthHelper.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1.x/dist/amazonLocationAuthHelper.js"></script>
 ```
 
 ```javascript
@@ -127,9 +127,9 @@ This example uses the Amazon Location Client to make a request that that authent
 
 ```html
 <!-- Importing Amazon Location Client -->
-<script src="https://www.unpkg.com/@aws/amazon-location-client@%5E1.0.0/dist/amazonLocationClient.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-client@1.x/dist/amazonLocationClient.js"></script>
 <!-- Importing the utility library from an HTML file -->
-<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@%5E1.0.0/dist/amazonLocationAuthHelper.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1.x/dist/amazonLocationAuthHelper.js"></script>
 ```
 
 ```javascript
@@ -155,7 +155,7 @@ This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/
 <!-- MapLibre GL JS -->
 <script src="https://www.unpkg.com/maplibre-gl@3.x/dist/maplibre-gl.js"></script>
 <!-- Importing the utility library from an HTML file -->
-<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@%5E1.0.0/dist/amazonLocationAuthHelper.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1.x/dist/amazonLocationAuthHelper.js"></script>
 ```
 
 ```javascript
