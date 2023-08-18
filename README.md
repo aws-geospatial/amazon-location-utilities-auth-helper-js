@@ -2,11 +2,11 @@
 
 Utilities to help customers authenticate when making [Amazon Location Service](https://aws.amazon.com/location/) API calls from their JavaScript application. This specifically helps when using [Amazon Cognito](https://docs.aws.amazon.com/location/latest/developerguide/authenticating-using-cognito.html) or [API keys](https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html) as the authentication method.
 
-# Installation
+## Installation
 
 Install this library from NPM for usage with modules:
 
-```
+```console
 npm install @aws/amazon-location-utilities-auth-helper
 ```
 
@@ -16,7 +16,7 @@ Importing in an HTML file for usage directly in the browser.
 <script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1.x/dist/amazonLocationAuthHelper.js"></script>
 ```
 
-# Usage
+## Usage
 
 Import the library and call the utility functions in the top-level namespace as needed. You can find more details about these functions in the [Documentation](#documentation) section.
 
@@ -176,15 +176,15 @@ const map = new maplibregl.Map({
 });
 ```
 
-# Documentation
+## Documentation
 
 Detailed documentation can be found under `/docs/index.html` after generating it by running:
 
-```
+```console
 npm run typedoc
 ```
 
-## withIdentityPoolId
+### `withIdentityPoolId`
 
 Creates an auth helper instance using credentials from Cognito.
 
@@ -192,7 +192,7 @@ Creates an auth helper instance using credentials from Cognito.
 const authHelper = await withIdentityPoolId(identityPoolId);
 ```
 
-## withAPIKey
+### `withAPIKey`
 
 Creates an auth helper instance using API key.
 
@@ -200,7 +200,7 @@ Creates an auth helper instance using API key.
 const authHelper = await withAPIKey(apiKey);
 ```
 
-# Getting Help
+## Getting Help
 
 The best way to interact with our team is through GitHub.
 You can [open an issue](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/issues/new/choose) and choose from one of our templates for
@@ -213,11 +213,11 @@ Please make sure to check out our resources too before opening an issue:
 
 - Our [Changelog](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/blob/master/CHANGELOG.md) for recent changes.
 
-# Contributing
+## Contributing
 
 We welcome community contributions and pull requests. See [CONTRIBUTING.md](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/blob/master/CONTRIBUTING.md) for information on how to set up a development environment and submit code.
 
-# License
+## License
 
 Amazon Location Utilities - Authentication Helper for JavaScript is distributed under the
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0),
