@@ -13,7 +13,7 @@ npm install @aws/amazon-location-utilities-auth-helper
 Importing in an HTML file for usage directly in the browser.
 
 ```html
-<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1.x/dist/amazonLocationAuthHelper.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1"></script>
 ```
 
 ## Usage
@@ -102,10 +102,10 @@ Utility functions will be within `amazonLocationAuthHelper`.
 This example uses the Amazon Location Client to make a request that that authenticates using Amazon Cognito.
 
 ```html
-<!-- Importing Amazon Location Client -->
-<script src="https://www.unpkg.com/@aws/amazon-location-client@1.x/dist/amazonLocationClient.js"></script>
-<!-- Importing the utility library from an HTML file -->
-<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1.x/dist/amazonLocationAuthHelper.js"></script>
+<!-- Import the Amazon Location Client -->
+<script src="https://www.unpkg.com/@aws/amazon-location-client@1"></script>
+<!-- Import the utility library -->
+<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1"></script>
 ```
 
 ```javascript
@@ -127,9 +127,9 @@ This example uses the Amazon Location Client to make a request that that authent
 
 ```html
 <!-- Importing Amazon Location Client -->
-<script src="https://www.unpkg.com/@aws/amazon-location-client@1.x/dist/amazonLocationClient.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-client@1"></script>
 <!-- Importing the utility library from an HTML file -->
-<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1.x/dist/amazonLocationAuthHelper.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1"></script>
 ```
 
 ```javascript
@@ -147,15 +147,15 @@ const command = new amazonLocationClient.CalculateRouteCommand(input);
 const response = await client.send(command);
 ```
 
-This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to make a request to render a map that authenticates using Amazon Cognito.
+This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using Amazon Cognito.
 
 > The authentication helper is not needed if when using MapLibre GL JS to render a map using API keys. It can be passed into the style endpoint following [this guide](https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html#using-apikeys-in-maps).
 
 ```html
 <!-- MapLibre GL JS -->
-<script src="https://www.unpkg.com/maplibre-gl@3.x/dist/maplibre-gl.js"></script>
+<script src="https://www.unpkg.com/maplibre-gl@3"></script>
 <!-- Importing the utility library from an HTML file -->
-<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1.x/dist/amazonLocationAuthHelper.js"></script>
+<script src="https://www.unpkg.com/@aws/amazon-location-utilities-auth-helper@1"></script>
 ```
 
 ```javascript
