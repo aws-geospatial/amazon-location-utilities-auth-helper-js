@@ -91,11 +91,17 @@ describe("AuthHelper for Cognito", () => {
       url: nonAWSUrl,
     });
     expect(Signer.signUrl).toHaveBeenCalledTimes(1);
-    expect(Signer.signUrl).toHaveBeenCalledWith(url, {
-      access_key: mockedCredentials.accessKeyId,
-      secret_key: mockedCredentials.secretAccessKey,
-      session_token: mockedCredentials.sessionToken,
-    });
+    expect(Signer.signUrl).toHaveBeenCalledWith(
+      url,
+      {
+        access_key: mockedCredentials.accessKeyId,
+        secret_key: mockedCredentials.secretAccessKey,
+        session_token: mockedCredentials.sessionToken,
+      },
+      {
+        service: "geo",
+      },
+    );
   });
 
   it("getLocationClientConfig should provide credentials from cognito", async () => {
