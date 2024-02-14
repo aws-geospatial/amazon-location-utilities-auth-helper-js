@@ -185,7 +185,7 @@ const authHelper = await amazonLocationAuthHelper.withIdentityPoolId(identityPoo
 ...
 ```
 
-You can retrieve the `cognito-id-token` form the user session [using Amplify](https://docs.amplify.aws/javascript/build-a-backend/auth/manage-user-session/#retrieve-a-user-session)
+You can retrieve the `cognito-id-token` from the user session [using Amplify](https://docs.amplify.aws/javascript/build-a-backend/auth/manage-user-session/#retrieve-a-user-session)
 
 ## Documentation
 
