@@ -168,6 +168,25 @@ const map = new maplibregl.Map({
 });
 ```
 
+alternatively, should you prefer to use authenticated identities you can modify the `withIdentityPoolId` signature to provide custom parameters:
+
+```javascript
+
+const userPoolId = "<User pool Id>";
+...
+
+// Create an authentication helper instance using credentials from Cognito
+const authHelper = await amazonLocationAuthHelper.withIdentityPoolId(identityPoolId, {
+  logins: {
+    [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: "conito-id-token"
+  }
+});
+
+...
+```
+
+You can retrieve the `cognito-id-token` form the user session [using Amplify](https://docs.amplify.aws/javascript/build-a-backend/auth/manage-user-session/#retrieve-a-user-session)
+
 ## Documentation
 
 Detailed documentation can be generated under `docs/index.html` by running:
