@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { MapAuthHelper, SDKAuthHelper } from "../common/types";
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+import { FromCognitoIdentityPoolParameters, fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { Signer } from "@aws-amplify/core";
 import { AwsCredentialIdentity } from "@aws-sdk/types";
 /**
@@ -10,11 +10,16 @@ import { AwsCredentialIdentity } from "@aws-sdk/types";
  *
  * @param identityPoolId Cognito Identity Pool Id
  */
-export async function withIdentityPoolId(identityPoolId: string): Promise<MapAuthHelper & SDKAuthHelper> {
+export async function withIdentityPoolId(
+  identityPoolId: string,
+  options?: Partial<FromCognitoIdentityPoolParameters>,
+): Promise<MapAuthHelper & SDKAuthHelper> {
   const region = identityPoolId.split(":")[0];
   const credentialsProvider = fromCognitoIdentityPool({
+    ...(options || {}),
     identityPoolId,
     clientConfig: {
+      ...(options && options.clientConfig ? options.clientConfig : {}),
       region,
     },
   });
