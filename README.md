@@ -178,7 +178,7 @@ const userPoolId = "<User pool Id>";
 // Create an authentication helper instance using credentials from Cognito
 const authHelper = await amazonLocationAuthHelper.withIdentityPoolId(identityPoolId, {
   logins: {
-    [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: "conito-id-token"
+    [`cognito-idp.${region}.amazonaws.com/${userPoolId}`]: "cognito-id-token"
   }
 });
 
