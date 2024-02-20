@@ -1,6 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { AwsCredentialIdentityProvider } from "@aws-sdk/types";
 import { SDKAuthHelper } from "../common/types";
 
 /**
@@ -22,6 +23,8 @@ export async function withAPIKey(apiKey: string): Promise<SDKAuthHelper> {
           return requestToSign;
         },
       },
+      // Empty value to avoid calling the default credential providers chain
+      credentials: (async () => ({})) as AwsCredentialIdentityProvider,
     }),
   };
 }

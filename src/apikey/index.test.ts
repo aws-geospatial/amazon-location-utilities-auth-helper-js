@@ -55,4 +55,9 @@ describe("AuthHelper for APIKey", () => {
     const authHelper = await withAPIKey(API_KEY);
     expect("getCredentials" in authHelper).toBe(false);
   });
+
+  it("should provide an empty `credentials` config value", async () => {
+    const authHelper = await withAPIKey(API_KEY);
+    expect(await authHelper.getLocationClientConfig().credentials()).toEqual({});
+  });
 });

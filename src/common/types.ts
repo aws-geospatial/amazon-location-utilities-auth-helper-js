@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { AwsCredentialIdentity, Provider, RequestSigner } from "@aws-sdk/types";
+import { AwsCredentialIdentity, AwsCredentialIdentityProvider, RequestSigner } from "@aws-sdk/types";
 
 export interface MapAuthenticationOptions {
   transformRequest: (url: string, resourceType?: string) => { url: string };
@@ -9,7 +9,7 @@ export interface MapAuthenticationOptions {
 
 export interface LocationClientConfig {
   signer?: RequestSigner;
-  credentials?: Provider<AwsCredentialIdentity>;
+  credentials?: AwsCredentialIdentityProvider;
 }
 
 export type getMapAuthenticationOptionsFunc = () => MapAuthenticationOptions;
