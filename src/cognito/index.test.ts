@@ -94,6 +94,23 @@ describe("AuthHelper for Cognito", () => {
     });
   });
 
+  it("should not use region and identityPoolId provided inside the options", async () => {
+    // region and identity pool id provided in the options are ignored since it's inferred from the cognitoIdentityPoolId
+    await withIdentityPoolId(cognitoIdentityPoolId, {
+      clientConfig: {
+        region: "unused-region",
+      },
+      identityPoolId: "unused-idp-id",
+    });
+    expect(fromCognitoIdentityPool).toHaveBeenCalledTimes(1);
+    expect(fromCognitoIdentityPool).toHaveBeenCalledWith({
+      identityPoolId: cognitoIdentityPoolId,
+      clientConfig: {
+        region,
+      },
+    });
+  });
+
   it("should refresh credentials in 1 hour minus 1 minute by default", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
 
