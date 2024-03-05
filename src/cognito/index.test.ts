@@ -54,6 +54,63 @@ describe("AuthHelper for Cognito", () => {
     });
   });
 
+  it("should get credentials from cognito using custom logins token", async () => {
+    await withIdentityPoolId(cognitoIdentityPoolId, {
+      logins: {
+        "cognito-idp.<region>.amazonaws.com/<YOUR_USER_POOL_ID>": "cognito-id-token",
+      },
+    });
+    expect(fromCognitoIdentityPool).toHaveBeenCalledTimes(1);
+    expect(fromCognitoIdentityPool).toHaveBeenCalledWith({
+      identityPoolId: cognitoIdentityPoolId,
+      clientConfig: {
+        region,
+      },
+      logins: {
+        "cognito-idp.<region>.amazonaws.com/<YOUR_USER_POOL_ID>": "cognito-id-token",
+      },
+    });
+  });
+
+  it("should get credentials from cognito using custom options with client config", async () => {
+    await withIdentityPoolId(cognitoIdentityPoolId, {
+      clientConfig: {
+        maxAttempts: 10,
+      },
+      logins: {
+        "cognito-idp.<region>.amazonaws.com/<YOUR_USER_POOL_ID>": "cognito-id-token",
+      },
+    });
+    expect(fromCognitoIdentityPool).toHaveBeenCalledTimes(1);
+    expect(fromCognitoIdentityPool).toHaveBeenCalledWith({
+      identityPoolId: cognitoIdentityPoolId,
+      clientConfig: {
+        region,
+        maxAttempts: 10,
+      },
+      logins: {
+        "cognito-idp.<region>.amazonaws.com/<YOUR_USER_POOL_ID>": "cognito-id-token",
+      },
+    });
+  });
+
+  it("should not use region and identityPoolId provided inside the options", async () => {
+    // region and identity pool id provided in the options are ignored since it's inferred from the cognitoIdentityPoolId
+    await withIdentityPoolId(cognitoIdentityPoolId, {
+      clientConfig: {
+        region: "unused-region",
+      },
+      identityPoolId: "unused-idp-id",
+    });
+    expect(fromCognitoIdentityPool).toHaveBeenCalledTimes(1);
+    expect(fromCognitoIdentityPool).toHaveBeenCalledWith({
+      identityPoolId: cognitoIdentityPoolId,
+      clientConfig: {
+        region,
+      },
+    });
+  });
+
   it("should refresh credentials in 1 hour minus 1 minute by default", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
 
