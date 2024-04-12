@@ -1,5 +1,6 @@
 /*
- * This is a copied and modified file from https://github.com/aws-amplify/amplify-js/blob/main/packages/core/src/Signer/Signer.ts
+ * This is a copied and modified file from https://github.com/aws-amplify/amplify-js/blob/b96a0eddb53e6cb14eac22a2f5d7e0d1039b22d6/packages/core/src/Signer/Signer.ts
+ * which was last modified on 02/13/2024
  * as well as several classes from https://github.com/aws-amplify/amplify-js/blob/main/packages/core/src/clients/middleware/signing/signer/signatureV4
  *
  * The Signer class has been deprecated and is no longer exported in aws-amplify/core. The aws-amplify/core package
