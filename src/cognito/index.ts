@@ -3,7 +3,7 @@
 
 import { MapAuthHelper, SDKAuthHelper } from "../common/types";
 import { FromCognitoIdentityPoolParameters, fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import { Signer } from "@aws-amplify/core";
+import { Signer } from "../utils/signer";
 import { AwsCredentialIdentity } from "@aws-sdk/types";
 /**
  * Creates an auth helper instance using credentials from Cognito.
@@ -45,17 +45,11 @@ export async function withIdentityPoolId(
         // Only sign aws URLs
         if (url.includes("amazonaws.com")) {
           return {
-            url: Signer.signUrl(
-              url,
-              {
-                access_key: credentials.accessKeyId,
-                secret_key: credentials.secretAccessKey,
-                session_token: credentials.sessionToken,
-              },
-              {
-                service: "geo",
-              },
-            ),
+            url: Signer.signUrl(url, region, {
+              access_key: credentials.accessKeyId,
+              secret_key: credentials.secretAccessKey,
+              session_token: credentials.sessionToken,
+            }),
           };
         }
 

@@ -3,19 +3,16 @@
 
 import { withIdentityPoolId } from "./index";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import { Signer } from "@aws-amplify/core";
 import Mock = jest.Mock;
 import { CognitoIdentityCredentialProvider } from "@aws-sdk/credential-provider-cognito-identity";
 
 jest.mock("@aws-sdk/credential-providers");
-jest.mock("@aws-amplify/core");
 
 describe("AuthHelper for Cognito", () => {
   jest.useFakeTimers();
   const region = "us-west-2";
   const cognitoIdentityPoolId = `${region}:TEST-IDENTITY-POOL-ID`;
   const url = "https://maps.geo.us-west-2.amazonaws.com/";
-  const signedUrl = "https://maps.geo.us-west-2.amazonaws.com/#signed";
   const nonAWSUrl = "https://example.com/";
   const mockedCredentials = {
     identityId: "identityId",
@@ -33,14 +30,12 @@ describe("AuthHelper for Cognito", () => {
   const mockedCredentialsProvider = jest.fn();
 
   beforeAll(() => {
-    Signer.signUrl = jest.fn(() => signedUrl);
     (<Mock<CognitoIdentityCredentialProvider>>fromCognitoIdentityPool).mockReturnValue(mockedCredentialsProvider);
   });
 
   beforeEach(() => {
     (<Mock<CognitoIdentityCredentialProvider>>fromCognitoIdentityPool).mockClear();
     mockedCredentialsProvider.mockResolvedValue(mockedCredentials);
-    (<Mock<string>>Signer.signUrl).mockClear();
   });
 
   it("should get credentials from cognito", async () => {
@@ -138,34 +133,53 @@ describe("AuthHelper for Cognito", () => {
     expect(authHelper.getCredentials()).toStrictEqual(mockedUpdatedCredentials);
   });
 
-  it("getMapAuthenticationOptions should contain transformRequest funtion to sign the AWS Urls using amplify signer", async () => {
+  it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS Urls using our custom signer", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
-    expect(transformRequest(url)).toStrictEqual({
-      url: signedUrl,
+    const originalUrl = new URL(url);
+    const signedUrl = new URL(transformRequest(url).url);
+
+    // Host and pathname should still be the same
+    expect(signedUrl.hostname).toStrictEqual(originalUrl.hostname);
+    expect(signedUrl.pathname).toStrictEqual(originalUrl.pathname);
+
+    const searchParams = signedUrl.searchParams;
+    expect(searchParams.size).toStrictEqual(6);
+
+    // Verify these search params exist on the signed url
+    // We don't need to test the actual values since they are non-deterministic or constants
+    const expectedSearchParams = ["X-Amz-Algorithm", "X-Amz-Date", "X-Amz-SignedHeaders", "X-Amz-Signature"];
+    expectedSearchParams.forEach((value) => {
+      expect(searchParams.has(value)).toStrictEqual(true);
     });
+
+    // We can expect the session token to match exactly as passed in
+    const securityToken = searchParams.get("X-Amz-Security-Token");
+    expect(securityToken).toStrictEqual(mockedCredentials.sessionToken);
+
+    // The credential starts with our access key, the rest is generated
+    const credential = searchParams.get("X-Amz-Credential");
+    expect(credential).toContain(mockedCredentials.accessKeyId);
+  });
+
+  it("getMapAuthenticationOptions transformRequest function should pass-through non AWS Urls unchanged", async () => {
+    const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+    const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+
     expect(transformRequest(nonAWSUrl)).toStrictEqual({
       url: nonAWSUrl,
     });
-    expect(Signer.signUrl).toHaveBeenCalledTimes(1);
-    expect(Signer.signUrl).toHaveBeenCalledWith(
-      url,
-      {
-        access_key: mockedCredentials.accessKeyId,
-        secret_key: mockedCredentials.secretAccessKey,
-        session_token: mockedCredentials.sessionToken,
-      },
-      {
-        service: "geo",
-      },
-    );
   });
 
   it("getLocationClientConfig should provide credentials from cognito", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     const additionalLocationClientConfig = authHelper.getLocationClientConfig();
     expect("signer" in additionalLocationClientConfig).toBe(false);
-    expect(await additionalLocationClientConfig.credentials()).toStrictEqual(mockedCredentials);
+
+    expect("credentials" in additionalLocationClientConfig).toBe(true);
+    if (additionalLocationClientConfig.credentials) {
+      expect(await additionalLocationClientConfig.credentials()).toStrictEqual(mockedCredentials);
+    }
   });
 
   it("getCredentials should return the credentials", async () => {

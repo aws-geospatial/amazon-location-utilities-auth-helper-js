@@ -26,6 +26,7 @@ export default {
     {
       file: "dist/amazonLocationAuthHelper.js",
       format: "esm",
+      inlineDynamicImports: true,
       banner,
       plugins: [
         getBabelOutputPlugin({
