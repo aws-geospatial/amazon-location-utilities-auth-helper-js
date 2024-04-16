@@ -2,7 +2,7 @@
   "name": "@aws/amazon-location-utilities-auth-helper",
   "description": "Amazon Location Utilities - Authentication Helper for JavaScript",
   "license": "Apache-2.0",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "keywords": [],
   "author": {
     "name": "Amazon Web Services",
