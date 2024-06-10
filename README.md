@@ -1,5 +1,7 @@
 # Amazon Location Utilities - Authentication Helper for JavaScript
 
+[![Version](https://img.shields.io/npm/v/@aws/amazon-location-utilities-auth-helper?style=flat)](https://www.npmjs.com/package/@aws/amazon-location-utilities-auth-helper) [![Tests](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/actions/workflows/build.yml/badge.svg)](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/actions/workflows/build.yml)
+
 These are utilities to help customers authenticate when making [Amazon Location Service](https://aws.amazon.com/location/) API calls from their JavaScript applications. This specifically helps when using [Amazon Cognito](https://docs.aws.amazon.com/location/latest/developerguide/authenticating-using-cognito.html) or [API keys](https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html) as the authentication method.
 
 ## Installation
