@@ -13,7 +13,9 @@ describe("AuthHelper for Cognito", () => {
   const region = "us-west-2";
   const cognitoIdentityPoolId = `${region}:TEST-IDENTITY-POOL-ID`;
   const url = "https://maps.geo.us-west-2.amazonaws.com/";
+  const govCloudUrl = "https://maps.geo-fips.us-gov-west-1.amazonaws.com/";
   const nonAWSUrl = "https://example.com/";
+  const nonLocationAWSUrl = "https://my.cool.service.us-west-2.amazonaws.com/";
   const mockedCredentials = {
     identityId: "identityId",
     accessKeyId: "accessKeyId",
@@ -162,12 +164,50 @@ describe("AuthHelper for Cognito", () => {
     expect(credential).toContain(mockedCredentials.accessKeyId);
   });
 
+  it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS GovCloud Urls using our custom signer", async () => {
+    const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+    const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+    const originalUrl = new URL(govCloudUrl);
+    const signedUrl = new URL(transformRequest(govCloudUrl).url);
+
+    // Host and pathname should still be the same
+    expect(signedUrl.hostname).toStrictEqual(originalUrl.hostname);
+    expect(signedUrl.pathname).toStrictEqual(originalUrl.pathname);
+
+    const searchParams = signedUrl.searchParams;
+    expect(searchParams.size).toStrictEqual(6);
+
+    // Verify these search params exist on the signed url
+    // We don't need to test the actual values since they are non-deterministic or constants
+    const expectedSearchParams = ["X-Amz-Algorithm", "X-Amz-Date", "X-Amz-SignedHeaders", "X-Amz-Signature"];
+    expectedSearchParams.forEach((value) => {
+      expect(searchParams.has(value)).toStrictEqual(true);
+    });
+
+    // We can expect the session token to match exactly as passed in
+    const securityToken = searchParams.get("X-Amz-Security-Token");
+    expect(securityToken).toStrictEqual(mockedCredentials.sessionToken);
+
+    // The credential starts with our access key, the rest is generated
+    const credential = searchParams.get("X-Amz-Credential");
+    expect(credential).toContain(mockedCredentials.accessKeyId);
+  });
+
   it("getMapAuthenticationOptions transformRequest function should pass-through non AWS Urls unchanged", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
     expect(transformRequest(nonAWSUrl)).toStrictEqual({
       url: nonAWSUrl,
+    });
+  });
+
+  it("getMapAuthenticationOptions transformRequest function should pass-through AWS Urls that aren't for the Amazon Location Service unchanged", async () => {
+    const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+    const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+
+    expect(transformRequest(nonLocationAWSUrl)).toStrictEqual({
+      url: nonLocationAWSUrl,
     });
   });
 
