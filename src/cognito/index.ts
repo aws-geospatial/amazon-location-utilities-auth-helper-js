@@ -42,8 +42,8 @@ export async function withIdentityPoolId(
   return {
     getMapAuthenticationOptions: () => ({
       transformRequest: (url: string) => {
-        // Only sign aws URLs
-        if (url.includes("amazonaws.com")) {
+        // Only sign aws location service URLs
+        if (url.match("(http|https)://(.*).geo.(.*).amazonaws.com")) {
           return {
             url: Signer.signUrl(url, region, {
               access_key: credentials.accessKeyId,

@@ -14,6 +14,7 @@ describe("AuthHelper for Cognito", () => {
   const cognitoIdentityPoolId = `${region}:TEST-IDENTITY-POOL-ID`;
   const url = "https://maps.geo.us-west-2.amazonaws.com/";
   const nonAWSUrl = "https://example.com/";
+  const nonLocationAWSUrl = "https://my.cool.service.us-west-2.amazonaws.com/";
   const mockedCredentials = {
     identityId: "identityId",
     accessKeyId: "accessKeyId",
@@ -168,6 +169,15 @@ describe("AuthHelper for Cognito", () => {
 
     expect(transformRequest(nonAWSUrl)).toStrictEqual({
       url: nonAWSUrl,
+    });
+  });
+
+  it("getMapAuthenticationOptions transformRequest function should pass-through AWS Urls that aren't for the Amazon Location Service unchanged", async () => {
+    const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+    const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+
+    expect(transformRequest(nonLocationAWSUrl)).toStrictEqual({
+      url: nonLocationAWSUrl,
     });
   });
 
