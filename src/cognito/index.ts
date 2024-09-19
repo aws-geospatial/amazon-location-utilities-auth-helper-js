@@ -43,7 +43,7 @@ export async function withIdentityPoolId(
     getMapAuthenticationOptions: () => ({
       transformRequest: (url: string) => {
         // Only sign Amazon Location Service URLs
-        if (url.match("https://maps.(geo|geo-fips).(.*).amazonaws.com")) {
+        if (url.match(/^https:\/\/maps\.(geo|geo-fips)\.[a-zA-Z0-9-]+\.(amazonaws\.com)$/)) {
           return {
             url: Signer.signUrl(url, region, {
               access_key: credentials.accessKeyId,
