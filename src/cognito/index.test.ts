@@ -222,6 +222,31 @@ describe("AuthHelper for Cognito", () => {
     }
   });
 
+  it("getLocationClientConfig should provide region from cognito", async () => {
+    const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+    const locationClientConfig = authHelper.getLocationClientConfig();
+
+    expect(locationClientConfig.region).toStrictEqual(region);
+  });
+
+  it("getClientConfig should provide credentials from cognito", async () => {
+    const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+    const additionalClientConfig = authHelper.getClientConfig();
+    expect("signer" in additionalClientConfig).toBe(false);
+
+    expect("credentials" in additionalClientConfig).toBe(true);
+    if (additionalClientConfig.credentials) {
+      expect(await additionalClientConfig.credentials()).toStrictEqual(mockedCredentials);
+    }
+  });
+
+  it("getClientConfig should provide region from cognito", async () => {
+    const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+    const clientConfig = authHelper.getClientConfig();
+
+    expect(clientConfig.region).toStrictEqual(region);
+  });
+
   it("getCredentials should return the credentials", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
