@@ -144,7 +144,7 @@ const map = new maplibregl.Map({
   container: "map",
   center: [-123.115898, 49.295868],
   zoom: 10,
-  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor?ColorScheme=${colorScheme}`,
+  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor?color-scheme=${colorScheme}`,
   ...authHelper.getMapAuthenticationOptions(),
 });
 ```
@@ -158,15 +158,13 @@ Utility functions are available under the `amazonLocationAuthHelper` global.
 This example uses the Amazon Location Client to make a request that that authenticates using API keys.
 
 ```html
-<!-- Importing Amazon Location Client -->
+<!-- Importing Amazon Location Client (which includes the auth-helper) -->
 <script src="https://cdn.jsdelivr.net/npm/@aws/amazon-location-client@1"></script>
-<!-- Importing the authentication SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@aws/amazon-location-utilities-auth-helper@1"></script>
 ```
 
 ```javascript
 // Create an authentication helper instance using an API key and region
-const authHelper = await amazonLocationAuthHelper.withAPIKey("<API Key>", "<Region>");
+const authHelper = await amazonLocationClient.withAPIKey("<API Key>", "<Region>");
 
 // Configures the client to use API keys when making supported requests
 const client = new amazonLocationClient.GeoRoutesClient(authHelper.getClientConfig());
@@ -178,15 +176,13 @@ const response = await client.send(command);
 This example uses the Amazon Location Client to make a request that that authenticates using Amazon Cognito.
 
 ```html
-<!-- Import the Amazon Location Client -->
+<!-- Import the Amazon Location Client (which includes the auth-helper) -->
 <script src="https://cdn.jsdelivr.net/npm/@aws/amazon-location-client@1"></script>
-<!-- Import the authentication SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@aws/amazon-location-utilities-auth-helper@1"></script>
 ```
 
 ```javascript
 // Create an authentication helper instance using credentials from Cognito
-const authHelper = await amazonLocationAuthHelper.withIdentityPoolId("<Identity Pool ID>");
+const authHelper = await amazonLocationClient.withIdentityPoolId("<Identity Pool ID>");
 
 // Configures the client to use credentials obtained via Amazon Cognito
 const client = new amazonLocationClient.GeoRoutesClient(authHelper.getClientConfig());
@@ -220,7 +216,7 @@ const map = new maplibregl.Map({
   container: "map",
   center: [-123.115898, 49.295868],
   zoom: 10,
-  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor?ColorScheme=${colorScheme}`,
+  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor?color-scheme=${colorScheme}`,
   ...authHelper.getMapAuthenticationOptions(),
 });
 ```
