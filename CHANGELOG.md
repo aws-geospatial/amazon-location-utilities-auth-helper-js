@@ -1,3 +1,12 @@
+# 1.1.0
+
+### ✨ Features and improvements
+
+- Added support for new standalone Maps, Places, and Routes SDKs
+- Added optional region field to the withAPIKey method
+- Added `getClientCongig()` method that can be used when constructing all supported clients (new Maps/Places/Routes clients + LocationClient)
+- Updated README with usage examples for all the new clients
+
 # 1.0.7
 
 ### ✨ Features and improvements
