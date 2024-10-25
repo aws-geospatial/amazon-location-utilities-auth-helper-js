@@ -39,6 +39,11 @@ export async function withIdentityPoolId(
 
   await refreshCredentials();
 
+  const clientConfig = {
+    credentials: credentialsProvider,
+    region: region,
+  };
+
   return {
     getMapAuthenticationOptions: () => ({
       transformRequest: (url: string) => {
@@ -56,9 +61,8 @@ export async function withIdentityPoolId(
         return { url };
       },
     }),
-    getLocationClientConfig: () => ({
-      credentials: credentialsProvider,
-    }),
+    getLocationClientConfig: () => clientConfig,
+    getClientConfig: () => clientConfig,
     getCredentials: () => credentials,
   };
 }

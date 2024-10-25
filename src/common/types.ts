@@ -10,6 +10,7 @@ export interface MapAuthenticationOptions {
 export interface LocationClientConfig {
   signer?: RequestSigner;
   credentials?: AwsCredentialIdentityProvider;
+  region?: string;
 }
 
 export type getMapAuthenticationOptionsFunc = () => MapAuthenticationOptions;
@@ -22,5 +23,8 @@ export interface MapAuthHelper {
 }
 
 export interface SDKAuthHelper {
+  /** @deprecated This method has been deprecated in favor of {@link getClientConfig} */
   getLocationClientConfig: getLocationClientConfigFunc;
+
+  getClientConfig: getLocationClientConfigFunc;
 }

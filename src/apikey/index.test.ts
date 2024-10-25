@@ -46,6 +46,31 @@ describe("AuthHelper for APIKey", () => {
     expect(await signer.sign(request)).toStrictEqual(request);
   });
 
+  it.each([
+    [{}, { key: API_KEY }],
+    [{ other: "value" }, { other: "value", key: API_KEY }],
+    [null, { key: API_KEY }],
+  ])("getClientConfig should provide a signer to add api key to the query", async (query, expectedQuery) => {
+    const authHelper = await withAPIKey(API_KEY);
+    const signer = authHelper.getClientConfig().signer;
+    const request = {
+      hostname: "amazonaws.com",
+      path: "/",
+      protocol: "https",
+      method: "GET",
+      headers: {},
+    };
+    expect(
+      await signer.sign({
+        ...request,
+        query,
+      }),
+    ).toStrictEqual({
+      ...request,
+      query: expectedQuery,
+    });
+  });
+
   it("should not provide stub getMapAuthenticationOptions function", async () => {
     const authHelper = await withAPIKey(API_KEY);
     expect("getMapAuthenticationOptions" in authHelper).toBe(false);
@@ -59,5 +84,17 @@ describe("AuthHelper for APIKey", () => {
   it("should provide an empty `credentials` config value", async () => {
     const authHelper = await withAPIKey(API_KEY);
     expect(await authHelper.getLocationClientConfig().credentials()).toEqual({});
+  });
+
+  it("should provide region if supplied", async () => {
+    const authHelper = await withAPIKey(API_KEY, "test-region");
+
+    expect(authHelper.getClientConfig().region).toStrictEqual("test-region");
+  });
+
+  it("should not provide region if not supplied", async () => {
+    const authHelper = await withAPIKey(API_KEY);
+
+    expect(authHelper.getClientConfig().region).toBeUndefined();
   });
 });
