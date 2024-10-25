@@ -26,24 +26,7 @@ You can find more details about these functions in the [Documentation](#document
 
 ### Usage with modules
 
-This example uses the standalone [Maps](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-amzn-geomaps-client/) SDK to make a request that authenticates using API keys.
-
-```javascript
-// Import from the AWS JavaScript SDK V3 (GeoMapsClient)
-import { GeoMapsClient, GetStaticMapCommand } from "@amzn/geomaps-client";
-// Import the utility functions
-import { withAPIKey } from "@aws/amazon-location-utilities-auth-helper";
-
-// Create an authentication helper instance using an API key and region
-const authHelper = await withAPIKey("<API Key>", "<Region>");
-
-// Configures the client to use API keys when making supported requests
-const client = new GeoMapsClient(authHelper.getClientConfig());
-
-const input = { ... };
-const command = new GetStaticMapCommand(input);
-const response = await client.send(command);
-```
+These examples showcase importing our libraries in modules, and then using a bundler to combine your module(s) into a script that can be run in the browser or other environments.
 
 This example uses the standalone [Places](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-amzn-geoplaces-client/) SDK to make a request that authenticates using API keys.
 
@@ -87,7 +70,7 @@ This example uses the [Location](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3
 
 ```javascript
 // Import from the AWS JavaScript SDK V3 (LocationClient)
-import { LocationClient, GetPlaceCommand } from "@aws-sdk/client-location";
+import { LocationClient, ListGeofencesCommand } from "@aws-sdk/client-location";
 // Import the utility functions
 import { withAPIKey } from "@aws/amazon-location-utilities-auth-helper";
 
@@ -98,7 +81,7 @@ const authHelper = await withAPIKey("<API Key>", "<Region>");
 const client = new LocationClient(authHelper.getClientConfig());
 
 const input = { ... };
-const command = new GetPlaceCommand(input);
+const command = new ListGeofencesCommand(input);
 const response = await client.send(command);
 ```
 
@@ -121,9 +104,28 @@ const command = new CalculateRoutesCommand(input);
 const response = await client.send(command);
 ```
 
-This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using Amazon Cognito.
+This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using an API key.
 
-> The authentication helper is not needed when using MapLibre GL JS to render a map using API keys. The style descriptor URL and API key can be passed into the style endpoint following [this guide](https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html#using-apikeys-in-maps).
+> The authentication helper is not needed when using MapLibre to render a map using API keys, because the style descriptor URL and API key can be passed into the style endpoint directly.
+
+```javascript
+// Import MapLibre GL JS
+import maplibregl from "maplibre-gl";
+
+const apiKey = "<API Key>";
+const region = "<Region>"; // Region containing Amazon Location resource
+const styleName = "Standard"; // Standard, Monochrome, Hybrid, or Satellite
+
+// Render the map
+const map = new maplibregl.Map({
+  container: "map",
+  center: [-123.115898, 49.295868],
+  zoom: 10,
+  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor?key=${apiKey}`,
+});
+```
+
+This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using Amazon Cognito.
 
 ```javascript
 // Import MapLibre GL JS
@@ -134,7 +136,6 @@ import { withIdentityPoolId } from "@aws/amazon-location-utilities-auth-helper";
 const identityPoolId = "<Identity Pool ID>";
 const region = "<Region>"; // Region containing Amazon Location resource
 const styleName = "Standard"; // Standard, Monochrome, Hybrid, or Satellite
-const colorScheme = "Light"; // Light or Dark
 
 // Create an authentication helper instance using credentials from Cognito
 const authHelper = await withIdentityPoolId(identityPoolId);
@@ -144,7 +145,7 @@ const map = new maplibregl.Map({
   container: "map",
   center: [-123.115898, 49.295868],
   zoom: 10,
-  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor?color-scheme=${colorScheme}`,
+  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor`,
   ...authHelper.getMapAuthenticationOptions(),
 });
 ```
@@ -158,7 +159,7 @@ Utility functions are available under the `amazonLocationAuthHelper` global.
 This example uses the Amazon Location Client to make a request that that authenticates using API keys.
 
 ```html
-<!-- Importing Amazon Location Client (which includes the auth-helper) -->
+<!-- Importing the Amazon Location Client (which includes the auth-helper) -->
 <script src="https://cdn.jsdelivr.net/npm/@aws/amazon-location-client@1"></script>
 ```
 
@@ -191,9 +192,30 @@ const command = new amazonLocationClient.routes.CalculateRoutesCommand(input);
 const response = await client.send(command);
 ```
 
-This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using Amazon Cognito.
+This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using an API key.
 
-> The authentication helper is not needed when using MapLibre GL JS to render a map using API keys. The style descriptor URL and API key can be passed into the style endpoint following [this guide](https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html#using-apikeys-in-maps).
+> The authentication helper is not needed when using MapLibre to render a map using API keys, because the style descriptor URL and API key can be passed into the style endpoint directly.
+
+```html
+<!-- MapLibre GL JS -->
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4"></script>
+```
+
+```javascript
+const apiKey = "<API Key>";
+const region = "<Region>"; // Region containing Amazon Location resource
+const styleName = "Standard"; // Standard, Monochrome, Hybrid, or Satellite
+
+// Render the map
+const map = new maplibregl.Map({
+  container: "map",
+  center: [-123.115898, 49.295868],
+  zoom: 10,
+  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor?key=${apiKey}`,
+});
+```
+
+This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using Amazon Cognito.
 
 ```html
 <!-- MapLibre GL JS -->
@@ -206,7 +228,6 @@ This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/
 const identityPoolId = "<Identity Pool ID>";
 const region = "<Region>"; // Region containing Amazon Location resource
 const styleName = "Standard"; // Standard, Monochrome, Hybrid, or Satellite
-const colorScheme = "Light"; // Light or Dark
 
 // Create an authentication helper instance using credentials from Cognito
 const authHelper = await amazonLocationAuthHelper.withIdentityPoolId(identityPoolId);
@@ -216,7 +237,7 @@ const map = new maplibregl.Map({
   container: "map",
   center: [-123.115898, 49.295868],
   zoom: 10,
-  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor?color-scheme=${colorScheme}`,
+  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor`,
   ...authHelper.getMapAuthenticationOptions(),
 });
 ```
