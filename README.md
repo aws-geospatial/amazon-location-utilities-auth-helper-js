@@ -30,9 +30,13 @@ These examples showcase importing our libraries in modules, and then using a bun
 
 This example uses the standalone [Places](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-amzn-geoplaces-client/) SDK to make a request that authenticates using API keys.
 
+```console
+npm install @aws-sdk/geo-places-client
+```
+
 ```javascript
 // Import from the AWS JavaScript SDK V3 (GeoPlacesClient)
-import { GeoPlacesClient, GeocodeCommand } from "@amzn/geoplaces-client";
+import { GeoPlacesClient, GeocodeCommand } from "@aws-sdk/geo-places-client";
 // Import the utility functions
 import { withAPIKey } from "@aws/amazon-location-utilities-auth-helper";
 
@@ -49,9 +53,13 @@ const response = await client.send(command);
 
 This example uses the standalone [Routes](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-amzn-georoutes-client/) SDK to make a request that authenticates using API keys.
 
+```console
+npm install @aws-sdk/geo-routes-client
+```
+
 ```javascript
 // Import from the AWS JavaScript SDK V3 (GeoRoutesClient)
-import { GeoRoutesClient, CalculateRoutesCommand } from "@amzn/georoutes-client";
+import { GeoRoutesClient, CalculateRoutesCommand } from "@aws-sdk/geo-routes-client";
 // Import the utility functions
 import { withAPIKey } from "@aws/amazon-location-utilities-auth-helper";
 
@@ -67,6 +75,10 @@ const response = await client.send(command);
 ```
 
 This example uses the [Location](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-location/) SDK to make a request that authenticates using API keys.
+
+```console
+npm install @aws-sdk/client-location
+```
 
 ```javascript
 // Import from the AWS JavaScript SDK V3 (LocationClient)
@@ -87,9 +99,13 @@ const response = await client.send(command);
 
 This example uses the standalone [Routes](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-amzn-georoutes-client/) SDK to make a request that that authenticates using Amazon Cognito.
 
+```console
+npm install @aws-sdk/geo-routes-client
+```
+
 ```javascript
 // Import from the AWS JavaScript SDK V3 (GeoRoutesClient)
-import { GeoRoutesClient, CalculateRoutesCommand } from "@amzn/georoutes-client";
+import { GeoRoutesClient, CalculateRoutesCommand } from "@aws-sdk/geo-routes-client";
 // Import the utility functions
 import { withIdentityPoolId } from "@aws/amazon-location-utilities-auth-helper";
 
