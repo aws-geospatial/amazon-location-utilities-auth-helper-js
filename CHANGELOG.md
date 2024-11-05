@@ -1,3 +1,10 @@
+# 1.2.0
+
+### ✨ Features and improvements
+
+- Added support for Amazon Cognito when using standalone Maps SDK URLs [#48](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/48)
+- Modified `withAPIKey` API to be used synchronously [#49](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/49)
+
 # 1.1.0
 
 ### ✨ Features and improvements
