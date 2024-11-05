@@ -12,7 +12,8 @@ describe("AuthHelper for Cognito", () => {
   jest.useFakeTimers();
   const region = "us-west-2";
   const cognitoIdentityPoolId = `${region}:TEST-IDENTITY-POOL-ID`;
-  const url = "https://maps.geo.us-west-2.amazonaws.com/";
+  const standaloneMapsUrl = "https://maps.geo.us-west-2.amazonaws.com/v2";
+  const locationUrl = "https://maps.geo.us-west-2.amazonaws.com/maps/v0/maps/TestMapName";
   const govCloudUrl = "https://maps.geo-fips.us-gov-west-1.amazonaws.com/";
   const nonAWSUrl = "https://example.com/";
   const nonLocationAWSUrl = "https://my.cool.service.us-west-2.amazonaws.com/";
@@ -135,11 +136,15 @@ describe("AuthHelper for Cognito", () => {
     expect(authHelper.getCredentials()).toStrictEqual(mockedUpdatedCredentials);
   });
 
-  it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS Urls using our custom signer", async () => {
+  // For the standalone Places SDK, the url should only be signed when accessing the map tiles
+  it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS standalone Maps URLs for map tiles using our custom signer", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+
+    const url = standaloneMapsUrl + "/tiles";
+
     const originalUrl = new URL(url);
-    const signedUrl = new URL(transformRequest(url).url);
+    const signedUrl = new URL(transformRequest(url, "Tile").url);
 
     // Host and pathname should still be the same
     expect(signedUrl.hostname).toStrictEqual(originalUrl.hostname);
@@ -159,10 +164,67 @@ describe("AuthHelper for Cognito", () => {
     const securityToken = searchParams.get("X-Amz-Security-Token");
     expect(securityToken).toStrictEqual(mockedCredentials.sessionToken);
 
-    // The credential starts with our access key, the rest is generated
+    // The credential is formatted as such:
+    //    <Access Key ID>/<CURRENT DATE>/<SIGNING REGION>/<SIGNING SERVICE NAME>/aws4_request
+    // We need to validate that the access key matches our mocked credentials,
+    // and that the signing service name is "geo-maps" for all standalone Maps SDK tile requests
     const credential = searchParams.get("X-Amz-Credential");
-    expect(credential).toContain(mockedCredentials.accessKeyId);
+    const credentialParts = credential?.split("/");
+    expect(credentialParts?.[0]).toStrictEqual(mockedCredentials.accessKeyId);
+    expect(credentialParts?.[3]).toStrictEqual("geo-maps");
   });
+
+  // For the standalone Places SDK, the url should not be signed when accessing all style descriptor, sprites, and glyphs
+  it.each([["Style"], ["SpriteJSON"], ["Glyphs"]])(
+    "getMapAuthenticationOptions should contain transformRequest function to sign the AWS Location URLs for %i using our custom signer",
+    async (resourceType) => {
+      const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+      const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+
+      expect(transformRequest(standaloneMapsUrl, resourceType)).toStrictEqual({
+        url: standaloneMapsUrl,
+      });
+    },
+  );
+
+  // For the consolidated Location SDK, the url should be signed when accessing all resources (style descriptor, sprites, glyphs, and map tiles)
+  it.each([["Style"], ["SpriteJSON"], ["Glyphs"], ["Tile"]])(
+    "getMapAuthenticationOptions should contain transformRequest function to sign the AWS Location URLs for %i using our custom signer",
+    async (resourceType) => {
+      const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+      const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+
+      const originalUrl = new URL(locationUrl);
+      const signedUrl = new URL(transformRequest(locationUrl, resourceType).url);
+
+      // Host and pathname should still be the same
+      expect(signedUrl.hostname).toStrictEqual(originalUrl.hostname);
+      expect(signedUrl.pathname).toStrictEqual(originalUrl.pathname);
+
+      const searchParams = signedUrl.searchParams;
+      expect(searchParams.size).toStrictEqual(6);
+
+      // Verify these search params exist on the signed url
+      // We don't need to test the actual values since they are non-deterministic or constants
+      const expectedSearchParams = ["X-Amz-Algorithm", "X-Amz-Date", "X-Amz-SignedHeaders", "X-Amz-Signature"];
+      expectedSearchParams.forEach((value) => {
+        expect(searchParams.has(value)).toStrictEqual(true);
+      });
+
+      // We can expect the session token to match exactly as passed in
+      const securityToken = searchParams.get("X-Amz-Security-Token");
+      expect(securityToken).toStrictEqual(mockedCredentials.sessionToken);
+
+      // The credential is formatted as such:
+      //    <Access Key ID>/<CURRENT DATE>/<SIGNING REGION>/<SIGNING SERVICE NAME>/aws4_request
+      // We need to validate that the access key matches our mocked credentials,
+      // and that the signing service name is "geo" for all consolidated Location SDK requests
+      const credential = searchParams.get("X-Amz-Credential");
+      const credentialParts = credential?.split("/");
+      expect(credentialParts?.[0]).toStrictEqual(mockedCredentials.accessKeyId);
+      expect(credentialParts?.[3]).toStrictEqual("geo");
+    },
+  );
 
   it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS GovCloud Urls using our custom signer", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);

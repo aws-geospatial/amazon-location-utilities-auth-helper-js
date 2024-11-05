@@ -83,7 +83,7 @@ interface Presignable extends Pick<HttpRequest, "body" | "url"> {
 }
 
 export class Signer {
-  static signUrl(urlToSign: string, region: string, accessInfo: any): string {
+  static signUrl(urlToSign: string, region: string, serviceName: string, accessInfo: any): string {
     const method = "GET";
     let body: undefined;
 
@@ -93,7 +93,7 @@ export class Signer {
       url: new URL(urlToSign),
     };
 
-    const options = getOptions(urlToSign, region, accessInfo);
+    const options = getOptions(urlToSign, region, serviceName, accessInfo);
     const signedUrl = presignUrl(presignable, options);
 
     return signedUrl.toString();
@@ -103,6 +103,7 @@ export class Signer {
 const getOptions = (
   url: string,
   region: string,
+  serviceName: string,
   accessInfo: { access_key: string; secret_key: string; session_token: string },
 ) => {
   const { access_key, secret_key, session_token } = accessInfo ?? {};
@@ -112,14 +113,11 @@ const getOptions = (
     sessionToken: session_token,
   };
 
-  // Service hard-coded to "geo" for our purposes
-  const service = "geo";
-
   return {
     credentials,
     signingDate: new Date(),
     signingRegion: region,
-    signingService: service,
+    signingService: serviceName,
   };
 };
 

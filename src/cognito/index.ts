@@ -46,11 +46,32 @@ export async function withIdentityPoolId(
 
   return {
     getMapAuthenticationOptions: () => ({
-      transformRequest: (url: string) => {
+      transformRequest: (url: string, resourceType?: string) => {
         // Only sign Amazon Location Service URLs
         if (url.match(/^https:\/\/maps\.(geo|geo-fips)\.[a-z0-9-]+\.(amazonaws\.com)/)) {
+          const urlObj = new URL(url);
+
+          // Split the pathname into parts, using the filter(Boolean) to ignore any empty parts,
+          // since the first item will be empty because the pathname looks like:
+          //    /v2/styles/Standard/descriptor
+          const pathParts = urlObj.pathname.split("/").filter(Boolean);
+
+          // The signing service name for the standalone Maps SDK is "geo-maps"
+          let serviceName = "geo-maps";
+          if (pathParts?.[0] == "v2") {
+            // For this case, we only need to sign the map tiles, so we
+            // can return the original url if it is for descriptor, sprites, or glyphs
+            if (!resourceType || resourceType !== "Tile") {
+              return { url };
+            }
+          } else {
+            // The signing service name for the consolidated Location Client is "geo"
+            // In this case, we need to sign all URLs (sprites, glyphs, map tiles)
+            serviceName = "geo";
+          }
+
           return {
-            url: Signer.signUrl(url, region, {
+            url: Signer.signUrl(url, region, serviceName, {
               access_key: credentials.accessKeyId,
               secret_key: credentials.secretAccessKey,
               session_token: credentials.sessionToken,
