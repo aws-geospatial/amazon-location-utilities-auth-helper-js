@@ -10,7 +10,7 @@ import { LocationClientConfig, SDKAuthHelper } from "../common/types";
  *
  * @param apiKey APIKey
  */
-export async function withAPIKey(apiKey: string, region?: string): Promise<SDKAuthHelper> {
+export function withAPIKey(apiKey: string, region?: string): SDKAuthHelper {
   const clientConfig: LocationClientConfig = {
     signer: {
       sign: async (requestToSign) => {

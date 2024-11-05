@@ -20,7 +20,7 @@ describe("AuthHelper for APIKey", () => {
       headers: {},
     };
     expect(
-      await signer.sign({
+      await signer?.sign({
         ...request,
         query,
       }),
@@ -29,6 +29,34 @@ describe("AuthHelper for APIKey", () => {
       query: expectedQuery,
     });
   });
+
+  it.each([
+    [{}, { key: API_KEY }],
+    [{ other: "value" }, { other: "value", key: API_KEY }],
+    [null, { key: API_KEY }],
+  ])(
+    "getLocationClientConfig should provide a signer to the query when using synchronous withAPIKey",
+    async (query, expectedQuery) => {
+      const authHelper = withAPIKey(API_KEY);
+      const signer = authHelper.getLocationClientConfig().signer;
+      const request = {
+        hostname: "amazonaws.com",
+        path: "/",
+        protocol: "https",
+        method: "GET",
+        headers: {},
+      };
+      expect(
+        await signer?.sign({
+          ...request,
+          query,
+        }),
+      ).toStrictEqual({
+        ...request,
+        query: expectedQuery,
+      });
+    },
+  );
 
   it("APIKey provided by getLocationClientConfig should be overridden by one set in the command", async () => {
     const authHelper = await withAPIKey(API_KEY);

@@ -41,7 +41,7 @@ import { GeoPlacesClient, GeocodeCommand } from "@aws-sdk/geo-places-client";
 import { withAPIKey } from "@aws/amazon-location-utilities-auth-helper";
 
 // Create an authentication helper instance using an API key and region
-const authHelper = await withAPIKey("<API Key>", "<Region>");
+const authHelper = withAPIKey("<API Key>", "<Region>");
 
 // Configures the client to use API keys when making supported requests
 const client = new GeoPlacesClient(authHelper.getClientConfig());
@@ -64,7 +64,7 @@ import { GeoRoutesClient, CalculateRoutesCommand } from "@aws-sdk/geo-routes-cli
 import { withAPIKey } from "@aws/amazon-location-utilities-auth-helper";
 
 // Create an authentication helper instance using an API key and region
-const authHelper = await withAPIKey("<API Key>", "<Region>");
+const authHelper = withAPIKey("<API Key>", "<Region>");
 
 // Configures the client to use API keys when making supported requests
 const client = new GeoRoutesClient(authHelper.getClientConfig());
@@ -87,7 +87,7 @@ import { LocationClient, ListGeofencesCommand } from "@aws-sdk/client-location";
 import { withAPIKey } from "@aws/amazon-location-utilities-auth-helper";
 
 // Create an authentication helper instance using an API key and region
-const authHelper = await withAPIKey("<API Key>", "<Region>");
+const authHelper = withAPIKey("<API Key>", "<Region>");
 
 // Configures the client to use API keys when making supported requests
 const client = new LocationClient(authHelper.getClientConfig());
@@ -181,7 +181,7 @@ This example uses the Amazon Location Client to make a request that that authent
 
 ```javascript
 // Create an authentication helper instance using an API key and region
-const authHelper = await amazonLocationClient.withAPIKey("<API Key>", "<Region>");
+const authHelper = amazonLocationClient.withAPIKey("<API Key>", "<Region>");
 
 // Configures the client to use API keys when making supported requests
 const client = new amazonLocationClient.GeoRoutesClient(authHelper.getClientConfig());
@@ -289,7 +289,7 @@ npm run typedoc
 Creates an auth helper instance using API key (and region, optionally).
 
 ```javascript
-const authHelper = await withAPIKey(apiKey, region);
+const authHelper = withAPIKey(apiKey, region);
 ```
 
 ### `withIdentityPoolId`
