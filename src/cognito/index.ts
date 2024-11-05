@@ -46,7 +46,7 @@ export async function withIdentityPoolId(
 
   return {
     getMapAuthenticationOptions: () => ({
-      transformRequest: (url: string) => {
+      transformRequest: (url: string, resourceType?: string) => {
         // Only sign Amazon Location Service URLs
         if (url.match(/^https:\/\/maps\.(geo|geo-fips)\.[a-z0-9-]+\.(amazonaws\.com)/)) {
           const urlObj = new URL(url);
@@ -61,7 +61,7 @@ export async function withIdentityPoolId(
           if (pathParts?.[0] == "v2") {
             // For this case, we only need to sign the map tiles, so we
             // can return the original url if it is for descriptor, sprites, or glyphs
-            if (pathParts?.[1] != "tiles") {
+            if (!resourceType || resourceType !== "Tile") {
               return { url };
             }
           } else {

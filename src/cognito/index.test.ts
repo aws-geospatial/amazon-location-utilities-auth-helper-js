@@ -144,7 +144,7 @@ describe("AuthHelper for Cognito", () => {
     const url = standaloneMapsUrl + "/tiles";
 
     const originalUrl = new URL(url);
-    const signedUrl = new URL(transformRequest(url).url);
+    const signedUrl = new URL(transformRequest(url, "Tile").url);
 
     // Host and pathname should still be the same
     expect(signedUrl.hostname).toStrictEqual(originalUrl.hostname);
@@ -175,31 +175,27 @@ describe("AuthHelper for Cognito", () => {
   });
 
   // For the standalone Places SDK, the url should not be signed when accessing all style descriptor, sprites, and glyphs
-  it.each([["/styles/Standard/descriptor"], ["/styles/Standard/Light/Default/sprites"], ["/glyphs"]])(
+  it.each([["Style"], ["SpriteJSON"], ["Glyphs"]])(
     "getMapAuthenticationOptions should contain transformRequest function to sign the AWS Location URLs for %i using our custom signer",
-    async (resourceName) => {
+    async (resourceType) => {
       const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
       const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
-      const url = standaloneMapsUrl + resourceName;
-
-      expect(transformRequest(url)).toStrictEqual({
-        url: url,
+      expect(transformRequest(standaloneMapsUrl, resourceType)).toStrictEqual({
+        url: standaloneMapsUrl,
       });
     },
   );
 
   // For the consolidated Location SDK, the url should be signed when accessing all resources (style descriptor, sprites, glyphs, and map tiles)
-  it.each([["/style-descriptor"], ["/sprites"], ["/glyphs"], ["/tiles"]])(
+  it.each([["Style"], ["SpriteJSON"], ["Glyphs"], ["Tile"]])(
     "getMapAuthenticationOptions should contain transformRequest function to sign the AWS Location URLs for %i using our custom signer",
-    async (resourceName) => {
+    async (resourceType) => {
       const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
       const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
-      const url = locationUrl + resourceName;
-
-      const originalUrl = new URL(url);
-      const signedUrl = new URL(transformRequest(url).url);
+      const originalUrl = new URL(locationUrl);
+      const signedUrl = new URL(transformRequest(locationUrl, resourceType).url);
 
       // Host and pathname should still be the same
       expect(signedUrl.hostname).toStrictEqual(originalUrl.hostname);
