@@ -15,6 +15,8 @@ describe("AuthHelper for Cognito", () => {
   const standaloneMapsUrl = "https://maps.geo.us-west-2.amazonaws.com/v2";
   const locationUrl = "https://maps.geo.us-west-2.amazonaws.com/maps/v0/maps/TestMapName";
   const govCloudUrl = "https://maps.geo-fips.us-gov-west-1.amazonaws.com/";
+  const dualStackUrl = "https://maps.geo.us-west-2.api.aws/maps/v0/maps/TestMapName";
+  const dualStackStandaloneMapsUrl = "https://maps.geo.us-west-2.api.aws/v2";
   const nonAWSUrl = "https://example.com/";
   const nonLocationAWSUrl = "https://my.cool.service.us-west-2.amazonaws.com/";
   const mockedCredentials = {
@@ -136,7 +138,7 @@ describe("AuthHelper for Cognito", () => {
     expect(authHelper.getCredentials()).toStrictEqual(mockedUpdatedCredentials);
   });
 
-  // For the standalone Places SDK, the url should only be signed when accessing the map tiles
+  // For the standalone Maps SDK, the url should only be signed when accessing the map tiles
   it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS standalone Maps URLs for map tiles using our custom signer", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
@@ -174,9 +176,9 @@ describe("AuthHelper for Cognito", () => {
     expect(credentialParts?.[3]).toStrictEqual("geo-maps");
   });
 
-  // For the standalone Places SDK, the url should not be signed when accessing all style descriptor, sprites, and glyphs
+  // For the standalone Maps SDK, the url should not be signed when accessing all style descriptor, sprites, and glyphs
   it.each([["Style"], ["SpriteJSON"], ["Glyphs"]])(
-    "getMapAuthenticationOptions should contain transformRequest function to sign the AWS Location URLs for %i using our custom signer",
+    "getMapAuthenticationOptions should contain transformRequest function that doesn't sign the AWS Maps URLs for %i using our custom signer",
     async (resourceType) => {
       const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
       const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
@@ -254,6 +256,96 @@ describe("AuthHelper for Cognito", () => {
     const credential = searchParams.get("X-Amz-Credential");
     expect(credential).toContain(mockedCredentials.accessKeyId);
   });
+
+  // For the consolidated Location SDK, the dual-stack url should be signed when accessing all resources (style descriptor, sprites, glyphs, and map tiles)
+  it.each([["Style"], ["SpriteJSON"], ["Glyphs"], ["Tile"]])(
+    "getMapAuthenticationOptions should contain transformRequest function to sign the AWS Location Dual-stack URLs for %i using our custom signer",
+    async (resourceType) => {
+      const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+      const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+
+      const originalUrl = new URL(dualStackUrl);
+      const signedUrl = new URL(transformRequest(dualStackUrl, resourceType).url);
+
+      // Host and pathname should still be the same
+      expect(signedUrl.hostname).toStrictEqual(originalUrl.hostname);
+      expect(signedUrl.pathname).toStrictEqual(originalUrl.pathname);
+
+      const searchParams = signedUrl.searchParams;
+      expect(searchParams.size).toStrictEqual(6);
+
+      // Verify these search params exist on the signed url
+      // We don't need to test the actual values since they are non-deterministic or constants
+      const expectedSearchParams = ["X-Amz-Algorithm", "X-Amz-Date", "X-Amz-SignedHeaders", "X-Amz-Signature"];
+      expectedSearchParams.forEach((value) => {
+        expect(searchParams.has(value)).toStrictEqual(true);
+      });
+
+      // We can expect the session token to match exactly as passed in
+      const securityToken = searchParams.get("X-Amz-Security-Token");
+      expect(securityToken).toStrictEqual(mockedCredentials.sessionToken);
+
+      // The credential is formatted as such:
+      //    <Access Key ID>/<CURRENT DATE>/<SIGNING REGION>/<SIGNING SERVICE NAME>/aws4_request
+      // We need to validate that the access key matches our mocked credentials,
+      // and that the signing service name is "geo" for all consolidated Location SDK requests
+      const credential = searchParams.get("X-Amz-Credential");
+      const credentialParts = credential?.split("/");
+      expect(credentialParts?.[0]).toStrictEqual(mockedCredentials.accessKeyId);
+      expect(credentialParts?.[3]).toStrictEqual("geo");
+    },
+  );
+
+  // For the standalone Maps SDK, the dual-stack url should only be signed when accessing the map tiles
+  it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS standalone Maps Dual-stack URLs for map tiles using our custom signer", async () => {
+    const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+    const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+
+    const url = dualStackStandaloneMapsUrl + "/tiles";
+
+    const originalUrl = new URL(url);
+    const signedUrl = new URL(transformRequest(url, "Tile").url);
+
+    // Host and pathname should still be the same
+    expect(signedUrl.hostname).toStrictEqual(originalUrl.hostname);
+    expect(signedUrl.pathname).toStrictEqual(originalUrl.pathname);
+
+    const searchParams = signedUrl.searchParams;
+    expect(searchParams.size).toStrictEqual(6);
+
+    // Verify these search params exist on the signed url
+    // We don't need to test the actual values since they are non-deterministic or constants
+    const expectedSearchParams = ["X-Amz-Algorithm", "X-Amz-Date", "X-Amz-SignedHeaders", "X-Amz-Signature"];
+    expectedSearchParams.forEach((value) => {
+      expect(searchParams.has(value)).toStrictEqual(true);
+    });
+
+    // We can expect the session token to match exactly as passed in
+    const securityToken = searchParams.get("X-Amz-Security-Token");
+    expect(securityToken).toStrictEqual(mockedCredentials.sessionToken);
+
+    // The credential is formatted as such:
+    //    <Access Key ID>/<CURRENT DATE>/<SIGNING REGION>/<SIGNING SERVICE NAME>/aws4_request
+    // We need to validate that the access key matches our mocked credentials,
+    // and that the signing service name is "geo-maps" for all standalone Maps SDK tile requests
+    const credential = searchParams.get("X-Amz-Credential");
+    const credentialParts = credential?.split("/");
+    expect(credentialParts?.[0]).toStrictEqual(mockedCredentials.accessKeyId);
+    expect(credentialParts?.[3]).toStrictEqual("geo-maps");
+  });
+
+  // For the standalone Maps SDK, the dual-stack url should not be signed when accessing all style descriptor, sprites, and glyphs
+  it.each([["Style"], ["SpriteJSON"], ["Glyphs"]])(
+    "getMapAuthenticationOptions should contain transformRequest function that doesn't sign the AWS Maps Dual-stack URLs for %i using our custom signer",
+    async (resourceType) => {
+      const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
+      const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
+
+      expect(transformRequest(dualStackStandaloneMapsUrl, resourceType)).toStrictEqual({
+        url: dualStackStandaloneMapsUrl,
+      });
+    },
+  );
 
   it("getMapAuthenticationOptions transformRequest function should pass-through non AWS Urls unchanged", async () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);

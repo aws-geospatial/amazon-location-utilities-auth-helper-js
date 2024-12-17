@@ -48,7 +48,7 @@ export async function withIdentityPoolId(
     getMapAuthenticationOptions: () => ({
       transformRequest: (url: string, resourceType?: string) => {
         // Only sign Amazon Location Service URLs
-        if (url.match(/^https:\/\/maps\.(geo|geo-fips)\.[a-z0-9-]+\.(amazonaws\.com)/)) {
+        if (url.match(/^https:\/\/maps\.(geo|geo-fips)\.[a-z0-9-]+\.(amazonaws\.com|api\.aws)/)) {
           const urlObj = new URL(url);
 
           // Split the pathname into parts, using the filter(Boolean) to ignore any empty parts,
