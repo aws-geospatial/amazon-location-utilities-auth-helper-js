@@ -1,3 +1,9 @@
+# 1.2.1
+
+### ✨ Features and improvements
+
+- Extended map authentication support to handle dual-stack endpoints [#52](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/52)
+
 # 1.2.0
 
 ### ✨ Features and improvements
