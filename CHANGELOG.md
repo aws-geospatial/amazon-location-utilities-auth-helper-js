@@ -1,3 +1,9 @@
+# 1.2.2
+
+### ✨ Features and improvements
+
+- Updated all dependencies to latest versions as part of resolving @smithy/core conflict [#55](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/55)
+
 # 1.2.1
 
 ### ✨ Features and improvements
