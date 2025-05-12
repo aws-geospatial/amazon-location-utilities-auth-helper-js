@@ -83,7 +83,12 @@ interface Presignable extends Pick<HttpRequest, "body" | "url"> {
 }
 
 export class Signer {
-  static signUrl(urlToSign: string, region: string, serviceName: string, accessInfo: any): string {
+  static signUrl(
+    urlToSign: string,
+    region: string,
+    serviceName: string,
+    accessInfo: { access_key: string; secret_key: string; session_token: string },
+  ): string {
     const method = "GET";
     let body: undefined;
 
@@ -363,6 +368,7 @@ const getSignedHeaders = (headers: HttpRequest["headers"]): string =>
     .sort()
     .join(";");
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getHashedPayload = (body: HttpRequest["body"]): string => {
   // Modification - For our use-case, the body is always null,
   // so we just return the EMPTY_HASH
