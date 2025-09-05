@@ -13,4 +13,3 @@ jobs:
     uses: aws-geospatial/github-workflows-for-amazon-location/.github/workflows/node-release.yml@main
     secrets:
       NPM_ORG_TOKEN: ${{ secrets.NPM_ORG_TOKEN }}
-      
