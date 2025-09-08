@@ -40,7 +40,7 @@
     "./dist"
   ],
   "scripts": {
-    "clean": "rm -r dist",
+    "clean": "rm -rf dist",
     "prettier": "prettier -w .",
     "prettier:check": "prettier -c .",
     "lint": "eslint .",
