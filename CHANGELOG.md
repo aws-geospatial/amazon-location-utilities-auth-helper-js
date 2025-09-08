@@ -1,3 +1,9 @@
+# 1.2.3
+
+- Several dependency version updates
+- Updated brace-expansion to latest patched version to fix security vulnerability [#58] (https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/58)
+- Added permissions at the root level to ensure that the workflow does not inadvertently gain unnecessary write permissions [#57](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/57)
+
 # 1.2.2
 
 ### ✨ Features and improvements
