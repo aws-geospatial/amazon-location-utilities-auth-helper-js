@@ -1,3 +1,7 @@
+# 1.2.4
+
+- Several dependency version updates
+
 # 1.2.3
 
 - Several dependency version updates
