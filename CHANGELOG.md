@@ -1,3 +1,9 @@
+# 1.2.5
+
+- Bumped fast-xml-parser and @aws-sdk/credential-providers [#69](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/69)
+- Bumped diff from 4.0.2 to 4.0.4 [#68](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/68)
+- Bumped js-yaml from 3.14.1 to 3.14.2 [#67](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/67)
+
 # 1.2.4
 
 - Several dependency version updates
