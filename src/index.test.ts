@@ -5,7 +5,11 @@ describe("Exported functions", () => {
     expect("withAPIKey" in amazonLocationAuthHelper).toBe(true);
   });
 
-  it("Should export withAPIKey", () => {
+  it("Should export withIdentityPoolId", () => {
     expect("withIdentityPoolId" in amazonLocationAuthHelper).toBe(true);
+  });
+
+  it("Should export withCredentialProvider", () => {
+    expect("withCredentialProvider" in amazonLocationAuthHelper).toBe(true);
   });
 });

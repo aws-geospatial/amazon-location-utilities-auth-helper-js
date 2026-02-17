@@ -4,3 +4,4 @@
 export * from "./common/types";
 export * from "./cognito";
 export * from "./apikey";
+export * from "./credentialProvider";
