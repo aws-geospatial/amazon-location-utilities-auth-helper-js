@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/npm/v/@aws/amazon-location-utilities-auth-helper?style=flat)](https://www.npmjs.com/package/@aws/amazon-location-utilities-auth-helper) [![Tests](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/actions/workflows/build.yml/badge.svg)](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/actions/workflows/build.yml)
 
-These are utilities to help customers authenticate when making [Amazon Location Service](https://aws.amazon.com/location/) API calls from their JavaScript applications. This specifically helps when using [API keys](https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html) or [Amazon Cognito](https://docs.aws.amazon.com/location/latest/developerguide/authenticating-using-cognito.html) as the authentication method.
+These are utilities to help customers authenticate when making [Amazon Location Service](https://aws.amazon.com/location/) API calls from their JavaScript applications. This specifically helps when using [API keys](https://docs.aws.amazon.com/location/latest/developerguide/using-apikeys.html), [Amazon Cognito](https://docs.aws.amazon.com/location/latest/developerguide/authenticating-using-cognito.html), or a custom credential provider as the authentication method.
 
 ## Installation
 
@@ -120,6 +120,69 @@ const command = new CalculateRoutesCommand(input);
 const response = await client.send(command);
 ```
 
+This example uses the standalone [Routes](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-amzn-georoutes-client/) SDK to make a request that authenticates using a custom credential provider.
+
+```console
+npm install @aws-sdk/geo-routes-client
+```
+
+```javascript
+// Import from the AWS JavaScript SDK V3 (GeoRoutesClient)
+import { GeoRoutesClient, CalculateRoutesCommand } from "@aws-sdk/geo-routes-client";
+// Import the utility functions
+import { withCredentialProvider } from "@aws/amazon-location-utilities-auth-helper";
+
+// Create an authentication helper instance using a custom credential provider and region
+const authHelper = await withCredentialProvider(async () => {
+  // Fetch credentials from your custom source (e.g. a backend service, authenticated Cognito pool, etc.)
+  return {
+    accessKeyId: "<Access Key ID>",
+    secretAccessKey: "<Secret Access Key>",
+    sessionToken: "<Session Token>", // optional
+    expiration: new Date("<Expiration>"), // optional
+  };
+}, "<Region>");
+
+// Configures the client to use the custom credentials
+const client = new GeoRoutesClient(authHelper.getClientConfig());
+
+const input = { ... };
+const command = new CalculateRoutesCommand(input);
+const response = await client.send(command);
+```
+
+This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using a custom credential provider.
+
+```javascript
+// Import MapLibre GL JS
+import maplibregl from "maplibre-gl";
+// Import the utility function
+import { withCredentialProvider } from "@aws/amazon-location-utilities-auth-helper";
+
+const region = "<Region>"; // Region containing Amazon Location resource
+const styleName = "Standard"; // Standard, Monochrome, Hybrid, or Satellite
+
+// Create an authentication helper instance using a custom credential provider
+const authHelper = await withCredentialProvider(async () => {
+  // Fetch credentials from your custom source
+  return {
+    accessKeyId: "<Access Key ID>",
+    secretAccessKey: "<Secret Access Key>",
+    sessionToken: "<Session Token>", // optional
+    expiration: new Date("<Expiration>"), // optional
+  };
+}, region);
+
+// Render the map
+const map = new maplibregl.Map({
+  container: "map",
+  center: [-123.115898, 49.295868],
+  zoom: 10,
+  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor`,
+  ...authHelper.getMapAuthenticationOptions(),
+});
+```
+
 This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using an API key.
 
 > The authentication helper is not needed when using MapLibre to render a map using API keys, because the style descriptor URL and API key can be passed into the style endpoint directly.
@@ -214,7 +277,7 @@ This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/
 
 ```html
 <!-- MapLibre GL JS -->
-<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5"></script>
 ```
 
 ```javascript
@@ -235,7 +298,7 @@ This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/
 
 ```html
 <!-- MapLibre GL JS -->
-<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5"></script>
 <!-- Importing the authentication SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@aws/amazon-location-utilities-auth-helper@1"></script>
 ```
@@ -276,6 +339,40 @@ const authHelper = await amazonLocationAuthHelper.withIdentityPoolId(identityPoo
 
 You can retrieve the `cognito-id-token` from the user session [using Amplify](https://docs.amplify.aws/javascript/build-a-backend/auth/manage-user-session/#retrieve-a-user-session)
 
+This example uses [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/) to render a map that authenticates resource requests using a custom credential provider.
+
+```html
+<!-- MapLibre GL JS -->
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5"></script>
+<!-- Importing the authentication SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@aws/amazon-location-utilities-auth-helper@1"></script>
+```
+
+```javascript
+const region = "<Region>"; // Region containing Amazon Location resource
+const styleName = "Standard"; // Standard, Monochrome, Hybrid, or Satellite
+
+// Create an authentication helper instance using a custom credential provider
+const authHelper = await amazonLocationAuthHelper.withCredentialProvider(async () => {
+  // Fetch credentials from your custom source
+  return {
+    accessKeyId: "<Access Key ID>",
+    secretAccessKey: "<Secret Access Key>",
+    sessionToken: "<Session Token>", // optional
+    expiration: new Date("<Expiration>"), // optional
+  };
+}, region);
+
+// Render the map
+const map = new maplibregl.Map({
+  container: "map",
+  center: [-123.115898, 49.295868],
+  zoom: 10,
+  style: `https://maps.geo.${region}.amazonaws.com/v2/styles/${styleName}/descriptor`,
+  ...authHelper.getMapAuthenticationOptions(),
+});
+```
+
 ## Documentation
 
 Detailed documentation can be generated under `docs/index.html` by running:
@@ -298,6 +395,14 @@ Creates an auth helper instance using credentials from Cognito.
 
 ```javascript
 const authHelper = await withIdentityPoolId(identityPoolId);
+```
+
+### `withCredentialProvider`
+
+Creates an auth helper instance using an arbitrary [credential provider](https://www.npmjs.com/package/@aws-sdk/credential-providers#credentials-provider) function. This is useful when credentials are obtained through a custom mechanism, such as being granted explicit AWS credentials through a dedicated backend service.
+
+```javascript
+const authHelper = await withCredentialProvider(credentialProvider, region);
 ```
 
 ## Getting Help
