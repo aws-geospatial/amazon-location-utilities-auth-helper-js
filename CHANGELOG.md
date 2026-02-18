@@ -1,3 +1,9 @@
+# 1.3.0
+
+### ✨ Features and improvements
+
+- Added support for `withCredentialProvider` method, allowing users to provide custom credential providers for authentication [#73](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/73)
+
 # 1.2.5
 
 - Bumped fast-xml-parser and @aws-sdk/credential-providers [#69](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/69)
