@@ -32,15 +32,15 @@ describe("AuthHelper for Cognito", () => {
     secretAccessKey: "updated",
     sessionToken: "updated",
   };
-  const mockedCredentialsProvider = jest.fn();
+  const mockedCredentialProvider = jest.fn();
 
   beforeAll(() => {
-    (<Mock<CognitoIdentityCredentialProvider>>fromCognitoIdentityPool).mockReturnValue(mockedCredentialsProvider);
+    (<Mock<CognitoIdentityCredentialProvider>>fromCognitoIdentityPool).mockReturnValue(mockedCredentialProvider);
   });
 
   beforeEach(() => {
     (<Mock<CognitoIdentityCredentialProvider>>fromCognitoIdentityPool).mockClear();
-    mockedCredentialsProvider.mockResolvedValue(mockedCredentials);
+    mockedCredentialProvider.mockResolvedValue(mockedCredentials);
   });
 
   it("should get credentials from cognito", async () => {
@@ -115,7 +115,7 @@ describe("AuthHelper for Cognito", () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
 
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
-    mockedCredentialsProvider.mockResolvedValue(mockedUpdatedCredentials);
+    mockedCredentialProvider.mockResolvedValue(mockedUpdatedCredentials);
     await jest.advanceTimersByTimeAsync(3530000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
     await jest.advanceTimersByTimeAsync(20000);
@@ -127,11 +127,11 @@ describe("AuthHelper for Cognito", () => {
       ...mockedCredentials,
       expiration: new Date(new Date().getTime() + 300000), // expire in 5 minutes
     };
-    mockedCredentialsProvider.mockResolvedValue(mockedCredentialsWithExpiration);
+    mockedCredentialProvider.mockResolvedValue(mockedCredentialsWithExpiration);
 
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentialsWithExpiration);
-    mockedCredentialsProvider.mockResolvedValue(mockedUpdatedCredentials);
+    mockedCredentialProvider.mockResolvedValue(mockedUpdatedCredentials);
     await jest.advanceTimersByTimeAsync(230000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentialsWithExpiration);
     await jest.advanceTimersByTimeAsync(20000);

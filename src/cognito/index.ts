@@ -15,7 +15,7 @@ export async function withIdentityPoolId(
   options?: Partial<FromCognitoIdentityPoolParameters>,
 ): Promise<MapAuthHelper & SDKAuthHelper> {
   const region = identityPoolId.split(":")[0];
-  const credentialsProvider = fromCognitoIdentityPool({
+  const credentialProvider = fromCognitoIdentityPool({
     ...(options || {}),
     identityPoolId,
     clientConfig: {
@@ -24,5 +24,5 @@ export async function withIdentityPoolId(
     },
   });
 
-  return buildAuthHelper(credentialsProvider, region);
+  return buildAuthHelper(credentialProvider, region);
 }

@@ -10,12 +10,12 @@ import { buildAuthHelper } from "../common/authHelper";
  * are obtained through a custom mechanism, such as a Cognito Identity Pool that requires authentication first, or a
  * dedicated back-end service.
  *
- * @param credentialsProvider A function that returns AWS credentials (or a promise of them).
+ * @param credentialProvider A function that returns AWS credentials (or a promise of them).
  * @param region The AWS region for signing requests.
  */
 export async function withCredentialProvider(
-  credentialsProvider: AwsCredentialIdentityProvider,
+  credentialProvider: AwsCredentialIdentityProvider,
   region: string,
 ): Promise<MapAuthHelper & SDKAuthHelper> {
-  return buildAuthHelper(credentialsProvider, region);
+  return buildAuthHelper(credentialProvider, region);
 }

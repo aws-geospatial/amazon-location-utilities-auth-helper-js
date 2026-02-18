@@ -138,8 +138,8 @@ const authHelper = await withCredentialProvider(async () => {
   return {
     accessKeyId: "<Access Key ID>",
     secretAccessKey: "<Secret Access Key>",
-    sessionToken: "<Session Token>",
-    expiration: new Date("<Expiration>"),
+    sessionToken: "<Session Token>", // optional
+    expiration: new Date("<Expiration>"), // optional
   };
 }, "<Region>");
 
@@ -168,8 +168,8 @@ const authHelper = await withCredentialProvider(async () => {
   return {
     accessKeyId: "<Access Key ID>",
     secretAccessKey: "<Secret Access Key>",
-    sessionToken: "<Session Token>",
-    expiration: new Date("<Expiration>"),
+    sessionToken: "<Session Token>", // optional
+    expiration: new Date("<Expiration>"), // optional
   };
 }, region);
 
@@ -358,8 +358,8 @@ const authHelper = await amazonLocationAuthHelper.withCredentialProvider(async (
   return {
     accessKeyId: "<Access Key ID>",
     secretAccessKey: "<Secret Access Key>",
-    sessionToken: "<Session Token>",
-    expiration: new Date("<Expiration>"),
+    sessionToken: "<Session Token>", // optional
+    expiration: new Date("<Expiration>"), // optional
   };
 }, region);
 
@@ -402,7 +402,7 @@ const authHelper = await withIdentityPoolId(identityPoolId);
 Creates an auth helper instance using an arbitrary [credential provider](https://www.npmjs.com/package/@aws-sdk/credential-providers#credentials-provider) function. This is useful when credentials are obtained through a custom mechanism, such as being granted explicit AWS credentials through a dedicated backend service.
 
 ```javascript
-const authHelper = await withCredentialProvider(credentialsProvider, region);
+const authHelper = await withCredentialProvider(credentialProvider, region);
 ```
 
 ## Getting Help

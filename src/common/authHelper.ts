@@ -57,16 +57,16 @@ export function createTransformRequest(
  * Sets up automatic credential refresh. Credentials are refreshed 1 minute before expiration, or every hour if no
  * expiration is provided.
  *
- * @param credentialsProvider Function that fetches fresh credentials.
+ * @param credentialProvider Function that fetches fresh credentials.
  * @returns A function that returns the current credentials after the initial fetch.
  */
 export async function setupCredentialRefresh(
-  credentialsProvider: AwsCredentialIdentityProvider,
+  credentialProvider: AwsCredentialIdentityProvider,
 ): Promise<() => AwsCredentialIdentity> {
   let credentials: AwsCredentialIdentity;
 
   async function refreshCredentials() {
-    credentials = await credentialsProvider();
+    credentials = await credentialProvider();
 
     let timeToRefresh = 3600000; // default to 1 hour if credentials does not have expiration field
     if (credentials.expiration) {
@@ -85,17 +85,17 @@ export async function setupCredentialRefresh(
 /**
  * Builds a complete MapAuthHelper & SDKAuthHelper from a credentials provider and region.
  *
- * @param credentialsProvider Function that fetches AWS credentials.
+ * @param credentialProvider Function that fetches AWS credentials.
  * @param region AWS region for signing and client config.
  */
 export async function buildAuthHelper(
-  credentialsProvider: AwsCredentialIdentityProvider,
+  credentialProvider: AwsCredentialIdentityProvider,
   region: string,
 ): Promise<MapAuthHelper & SDKAuthHelper> {
-  const getCredentials = await setupCredentialRefresh(credentialsProvider);
+  const getCredentials = await setupCredentialRefresh(credentialProvider);
 
   const clientConfig = {
-    credentials: credentialsProvider,
+    credentials: credentialProvider,
     region,
   };
 

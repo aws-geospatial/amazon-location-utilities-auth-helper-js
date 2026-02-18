@@ -25,22 +25,22 @@ describe("AuthHelper for Credential Provider", () => {
     sessionToken: "updated",
   };
 
-  let mockedCredentialsProvider: jest.Mock;
+  let mockedCredentialProvider: jest.Mock;
 
   beforeEach(() => {
-    mockedCredentialsProvider = jest.fn().mockResolvedValue(mockedCredentials);
+    mockedCredentialProvider = jest.fn().mockResolvedValue(mockedCredentials);
   });
 
   it("should call the credentials provider on initialization", async () => {
-    await withCredentialProvider(mockedCredentialsProvider, region);
-    expect(mockedCredentialsProvider).toHaveBeenCalledTimes(1);
+    await withCredentialProvider(mockedCredentialProvider, region);
+    expect(mockedCredentialProvider).toHaveBeenCalledTimes(1);
   });
 
   it("should refresh credentials in 1 hour minus 1 minute by default", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
 
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
-    mockedCredentialsProvider.mockResolvedValue(mockedUpdatedCredentials);
+    mockedCredentialProvider.mockResolvedValue(mockedUpdatedCredentials);
     await jest.advanceTimersByTimeAsync(3530000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
     await jest.advanceTimersByTimeAsync(20000);
@@ -52,11 +52,11 @@ describe("AuthHelper for Credential Provider", () => {
       ...mockedCredentials,
       expiration: new Date(new Date().getTime() + 300000), // expire in 5 minutes
     };
-    mockedCredentialsProvider.mockResolvedValue(mockedCredentialsWithExpiration);
+    mockedCredentialProvider.mockResolvedValue(mockedCredentialsWithExpiration);
 
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentialsWithExpiration);
-    mockedCredentialsProvider.mockResolvedValue(mockedUpdatedCredentials);
+    mockedCredentialProvider.mockResolvedValue(mockedUpdatedCredentials);
     await jest.advanceTimersByTimeAsync(230000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentialsWithExpiration);
     await jest.advanceTimersByTimeAsync(20000);
@@ -65,7 +65,7 @@ describe("AuthHelper for Credential Provider", () => {
 
   // For the standalone Maps SDK, the url should only be signed when accessing the map tiles
   it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS standalone Maps URLs for map tiles using our custom signer", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
     const url = standaloneMapsUrl + "/tiles";
@@ -101,7 +101,7 @@ describe("AuthHelper for Credential Provider", () => {
   it.each([["Style"], ["SpriteJSON"], ["Glyphs"]])(
     "getMapAuthenticationOptions should contain transformRequest function that doesn't sign the AWS Maps URLs for %i using our custom signer",
     async (resourceType) => {
-      const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+      const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
       const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
       expect(transformRequest(standaloneMapsUrl, resourceType)).toStrictEqual({
@@ -114,7 +114,7 @@ describe("AuthHelper for Credential Provider", () => {
   it.each([["Style"], ["SpriteJSON"], ["Glyphs"], ["Tile"]])(
     "getMapAuthenticationOptions should contain transformRequest function to sign the AWS Location URLs for %i using our custom signer",
     async (resourceType) => {
-      const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+      const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
       const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
       const originalUrl = new URL(locationUrl);
@@ -143,7 +143,7 @@ describe("AuthHelper for Credential Provider", () => {
   );
 
   it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS GovCloud Urls using our custom signer", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
     const originalUrl = new URL(govCloudUrl);
     const signedUrl = new URL(transformRequest(govCloudUrl).url);
@@ -170,7 +170,7 @@ describe("AuthHelper for Credential Provider", () => {
   it.each([["Style"], ["SpriteJSON"], ["Glyphs"], ["Tile"]])(
     "getMapAuthenticationOptions should contain transformRequest function to sign the AWS Location Dual-stack URLs for %i using our custom signer",
     async (resourceType) => {
-      const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+      const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
       const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
       const originalUrl = new URL(dualStackUrl);
@@ -199,7 +199,7 @@ describe("AuthHelper for Credential Provider", () => {
 
   // Dual-stack standalone Maps SDK - only tiles should be signed
   it("getMapAuthenticationOptions should contain transformRequest function to sign the AWS standalone Maps Dual-stack URLs for map tiles using our custom signer", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
     const url = dualStackStandaloneMapsUrl + "/tiles";
@@ -231,7 +231,7 @@ describe("AuthHelper for Credential Provider", () => {
   it.each([["Style"], ["SpriteJSON"], ["Glyphs"]])(
     "getMapAuthenticationOptions should contain transformRequest function that doesn't sign the AWS Maps Dual-stack URLs for %i using our custom signer",
     async (resourceType) => {
-      const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+      const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
       const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
       expect(transformRequest(dualStackStandaloneMapsUrl, resourceType)).toStrictEqual({
@@ -241,7 +241,7 @@ describe("AuthHelper for Credential Provider", () => {
   );
 
   it("getMapAuthenticationOptions transformRequest function should pass-through non AWS Urls unchanged", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
     expect(transformRequest(nonAWSUrl)).toStrictEqual({
@@ -250,7 +250,7 @@ describe("AuthHelper for Credential Provider", () => {
   });
 
   it("getMapAuthenticationOptions transformRequest function should pass-through AWS Urls that aren't for the Amazon Location Service unchanged", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     const transformRequest = authHelper.getMapAuthenticationOptions().transformRequest;
 
     expect(transformRequest(nonLocationAWSUrl)).toStrictEqual({
@@ -259,7 +259,7 @@ describe("AuthHelper for Credential Provider", () => {
   });
 
   it("getLocationClientConfig should provide the credentials provider", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     const locationClientConfig = authHelper.getLocationClientConfig();
     expect("signer" in locationClientConfig).toBe(false);
 
@@ -270,14 +270,14 @@ describe("AuthHelper for Credential Provider", () => {
   });
 
   it("getLocationClientConfig should provide the region", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     const locationClientConfig = authHelper.getLocationClientConfig();
 
     expect(locationClientConfig.region).toStrictEqual(region);
   });
 
   it("getClientConfig should provide the credentials provider", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     const clientConfig = authHelper.getClientConfig();
     expect("signer" in clientConfig).toBe(false);
 
@@ -288,14 +288,14 @@ describe("AuthHelper for Credential Provider", () => {
   });
 
   it("getClientConfig should provide the region", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     const clientConfig = authHelper.getClientConfig();
 
     expect(clientConfig.region).toStrictEqual(region);
   });
 
   it("getCredentials should return the credentials", async () => {
-    const authHelper = await withCredentialProvider(mockedCredentialsProvider, region);
+    const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
   });
 });
