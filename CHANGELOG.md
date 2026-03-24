@@ -1,3 +1,11 @@
+# 1.3.1
+
+- Bumped fast-xml-parser and @aws-sdk/xml-builder [#75](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/75), [#81](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/81), [#85](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/85)
+- Bumped ajv from 6.12.6 to 6.14.0 [#76](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/76)
+- Bumped rollup from 4.40.2 to 4.59.0 [#78](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/78)
+- Bumped minimatch from 3.1.2 to 3.1.5 [#80](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/80)
+- Bumped flatted from 3.3.3 to 3.4.2 [#82](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/82), [#84](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/84)
+
 # 1.3.0
 
 ### ✨ Features and improvements
