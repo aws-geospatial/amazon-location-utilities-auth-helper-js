@@ -1,3 +1,10 @@
+# 1.3.2
+
+- Bumped picomatch from 2.3.1 to 2.3.2 [#87](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/87)
+- Bumped yaml from 2.7.1 to 2.8.3 [#88](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/88)
+- Bumped brace-expansion from 1.1.12 to 1.1.13 [#89](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/89)
+- Bumped fast-xml-parser and @aws-sdk/xml-builder [#90](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/90)
+
 # 1.3.1
 
 - Bumped fast-xml-parser and @aws-sdk/xml-builder [#75](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/75), [#81](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/81), [#85](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/85)
