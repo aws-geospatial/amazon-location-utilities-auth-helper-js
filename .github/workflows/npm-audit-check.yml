@@ -1,0 +1,11 @@
+name: NPM Audit Check
+on:
+  schedule:
+    - cron: "30 16 * * 5" # Every Friday 11:30 CT (16:30 UTC during CDT, 10:30 CT during CST)
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  run:
+    uses: aws-geospatial/github-workflows-for-amazon-location/.github/workflows/npm-audit-check.yml@main
