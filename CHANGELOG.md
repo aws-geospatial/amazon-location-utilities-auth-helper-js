@@ -1,3 +1,10 @@
+# 1.3.3
+
+### ✨ 🐞 Bug fixes
+
+- Added identity pool ID validation to ensure IDs follow the expected `region:guid` format [#93](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/93)
+- Updated minimum Node.js version requirement from 16.x to 20.x [#93](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/93)
+
 # 1.3.2
 
 - Bumped picomatch from 2.3.1 to 2.3.2 [#87](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js/pull/87)
