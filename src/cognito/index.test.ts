@@ -405,4 +405,53 @@ describe("AuthHelper for Cognito", () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
   });
+
+  describe("Identity Pool ID Validation", () => {
+    it("should throw error for empty string identity pool ID", async () => {
+      await expect(withIdentityPoolId("")).rejects.toThrow("Identity pool ID must be a non-empty string");
+    });
+
+    it("should throw error for null identity pool ID", async () => {
+      await expect(withIdentityPoolId(null as unknown as string)).rejects.toThrow(
+        "Identity pool ID must be a non-empty string",
+      );
+    });
+
+    it("should throw error for undefined identity pool ID", async () => {
+      await expect(withIdentityPoolId(undefined as unknown as string)).rejects.toThrow(
+        "Identity pool ID must be a non-empty string",
+      );
+    });
+
+    it("should throw error for identity pool ID without colon separator", async () => {
+      await expect(withIdentityPoolId("invalid-pool-id-no-colon")).rejects.toThrow(
+        'Invalid identity pool ID format: "invalid-pool-id-no-colon"',
+      );
+    });
+
+    it("should throw error for identity pool ID with multiple colons", async () => {
+      await expect(withIdentityPoolId("us-west-2:extra:colon")).rejects.toThrow(
+        'Invalid identity pool ID format: "us-west-2:extra:colon"',
+      );
+    });
+
+    it("should throw error for identity pool ID with empty region", async () => {
+      await expect(withIdentityPoolId(":12345678-1234-1234-1234-123456789012")).rejects.toThrow(
+        'Invalid identity pool ID format: ":12345678-1234-1234-1234-123456789012"',
+      );
+    });
+
+    it("should throw error for identity pool ID with empty guid", async () => {
+      await expect(withIdentityPoolId("us-west-2:")).rejects.toThrow('Invalid identity pool ID format: "us-west-2:"');
+    });
+
+    it("should throw error for identity pool ID that is just a colon", async () => {
+      await expect(withIdentityPoolId(":")).rejects.toThrow('Invalid identity pool ID format: ":"');
+    });
+
+    it("should accept valid identity pool ID format", async () => {
+      const validPoolId = "us-west-2:12345678-1234-1234-1234-123456789012";
+      await expect(withIdentityPoolId(validPoolId)).resolves.toBeDefined();
+    });
+  });
 });
