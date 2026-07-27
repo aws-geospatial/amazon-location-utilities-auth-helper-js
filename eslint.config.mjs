@@ -14,8 +14,16 @@ export default [
       parser: tseslintParser,
       globals: {
         Headers: "readonly",
-        ...globals.jest,
         ...globals.node,
+        describe: "readonly",
+        it: "readonly",
+        test: "readonly",
+        expect: "readonly",
+        beforeAll: "readonly",
+        beforeEach: "readonly",
+        afterAll: "readonly",
+        afterEach: "readonly",
+        vi: "readonly",
       },
     },
     rules: {
