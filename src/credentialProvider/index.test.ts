@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { withCredentialProvider } from "./index";
+import { vi } from "vitest";
 
 describe("AuthHelper for Credential Provider", () => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   const region = "us-west-2";
   const standaloneMapsUrl = "https://maps.geo.us-west-2.amazonaws.com/v2";
   const locationUrl = "https://maps.geo.us-west-2.amazonaws.com/maps/v0/maps/TestMapName";
@@ -25,10 +26,10 @@ describe("AuthHelper for Credential Provider", () => {
     sessionToken: "updated",
   };
 
-  let mockedCredentialProvider: jest.Mock;
+  let mockedCredentialProvider: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    mockedCredentialProvider = jest.fn().mockResolvedValue(mockedCredentials);
+    mockedCredentialProvider = vi.fn().mockResolvedValue(mockedCredentials);
   });
 
   it("should call the credentials provider on initialization", async () => {
@@ -41,9 +42,9 @@ describe("AuthHelper for Credential Provider", () => {
 
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
     mockedCredentialProvider.mockResolvedValue(mockedUpdatedCredentials);
-    await jest.advanceTimersByTimeAsync(3530000);
+    await vi.advanceTimersByTimeAsync(3530000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
-    await jest.advanceTimersByTimeAsync(20000);
+    await vi.advanceTimersByTimeAsync(20000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedUpdatedCredentials);
   });
 
@@ -57,9 +58,9 @@ describe("AuthHelper for Credential Provider", () => {
     const authHelper = await withCredentialProvider(mockedCredentialProvider, region);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentialsWithExpiration);
     mockedCredentialProvider.mockResolvedValue(mockedUpdatedCredentials);
-    await jest.advanceTimersByTimeAsync(230000);
+    await vi.advanceTimersByTimeAsync(230000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentialsWithExpiration);
-    await jest.advanceTimersByTimeAsync(20000);
+    await vi.advanceTimersByTimeAsync(20000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedUpdatedCredentials);
   });
 

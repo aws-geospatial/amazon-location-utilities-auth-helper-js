@@ -90,7 +90,7 @@ export class Signer {
     accessInfo: { access_key: string; secret_key: string; session_token: string },
   ): string {
     const method = "GET";
-    let body: undefined;
+    const body = undefined;
 
     const presignable = {
       body,

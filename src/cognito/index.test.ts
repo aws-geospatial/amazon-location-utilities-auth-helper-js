@@ -3,13 +3,13 @@
 
 import { withIdentityPoolId } from "./index";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import Mock = jest.Mock;
+import { vi, type Mock } from "vitest";
 import { CognitoIdentityCredentialProvider } from "@aws-sdk/credential-provider-cognito-identity";
 
-jest.mock("@aws-sdk/credential-providers");
+vi.mock("@aws-sdk/credential-providers");
 
 describe("AuthHelper for Cognito", () => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   const region = "us-west-2";
   const cognitoIdentityPoolId = `${region}:TEST-IDENTITY-POOL-ID`;
   const standaloneMapsUrl = "https://maps.geo.us-west-2.amazonaws.com/v2";
@@ -32,7 +32,7 @@ describe("AuthHelper for Cognito", () => {
     secretAccessKey: "updated",
     sessionToken: "updated",
   };
-  const mockedCredentialProvider = jest.fn();
+  const mockedCredentialProvider = vi.fn();
 
   beforeAll(() => {
     (<Mock<CognitoIdentityCredentialProvider>>fromCognitoIdentityPool).mockReturnValue(mockedCredentialProvider);
@@ -116,9 +116,9 @@ describe("AuthHelper for Cognito", () => {
 
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
     mockedCredentialProvider.mockResolvedValue(mockedUpdatedCredentials);
-    await jest.advanceTimersByTimeAsync(3530000);
+    await vi.advanceTimersByTimeAsync(3530000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentials);
-    await jest.advanceTimersByTimeAsync(20000);
+    await vi.advanceTimersByTimeAsync(20000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedUpdatedCredentials);
   });
 
@@ -132,9 +132,9 @@ describe("AuthHelper for Cognito", () => {
     const authHelper = await withIdentityPoolId(cognitoIdentityPoolId);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentialsWithExpiration);
     mockedCredentialProvider.mockResolvedValue(mockedUpdatedCredentials);
-    await jest.advanceTimersByTimeAsync(230000);
+    await vi.advanceTimersByTimeAsync(230000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedCredentialsWithExpiration);
-    await jest.advanceTimersByTimeAsync(20000);
+    await vi.advanceTimersByTimeAsync(20000);
     expect(authHelper.getCredentials()).toStrictEqual(mockedUpdatedCredentials);
   });
 
